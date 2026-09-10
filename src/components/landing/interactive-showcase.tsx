@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 import { SHOWCASE_SLIDES } from "@/components/landing/showcase-data";
 import { ShowcaseSlide } from "@/components/landing/showcase-slide";
@@ -10,58 +13,172 @@ import { Reveal } from "@/components/shared/reveal";
 import { Container } from "@/components/layout/container";
 import { cn } from "@/lib/utils/cn";
 
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
 const AUTO_ADVANCE_MS = 5200;
+const LAST_INDEX = SHOWCASE_SLIDES.length - 1;
 
 /**
  * How-it-works: editorial headline + living pipeline carousel.
- * Preserves slide data, auto-advance, and keyboard/mouse controls.
+ *
+ * Desktop (lg+): the card track is pinned and driven by GSAP
+ * ScrollTrigger — cards slide horizontally as the *page itself*
+ * scrolls (scrub tied 1:1 to scroll position), then release back into
+ * normal vertical scroll once the last card is reached. This is scroll
+ * itself, not a separate timer/carousel animation layered on top.
+ *
+ * Mobile/reduced-motion: falls back to the original swipeable,
+ * snap-scrolling, auto-advancing track.
  */
 export function InteractiveShowcase() {
   const reduce = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [pinned, setPinned] = useState(false);
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const pinnedRef = useRef(false);
 
-  const goTo = useCallback((index: number) => {
-    const next = (index + SHOWCASE_SLIDES.length) % SHOWCASE_SLIDES.length;
-    setActiveIndex(next);
-  }, []);
+  const goTo = useCallback(
+    (index: number) => {
+      const next = (index + SHOWCASE_SLIDES.length) % SHOWCASE_SLIDES.length;
+      setActiveIndex(next);
 
+      const st = scrollTriggerRef.current;
+      if (pinnedRef.current && st) {
+        const progress = LAST_INDEX > 0 ? next / LAST_INDEX : 0;
+        const y = st.start + progress * (st.end - st.start);
+        if (reduce) {
+          window.scrollTo(0, y);
+        } else {
+          gsap.to(window, {
+            duration: 0.9,
+            ease: "power3.inOut",
+            scrollTo: { y, autoKill: true },
+          });
+        }
+        return;
+      }
+
+      const stage = stageRef.current;
+      if (!stage) return;
+      const active = stage.querySelector<HTMLElement>(
+        `[data-slide-index="${next}"]`,
+      );
+      if (!active) return;
+      const targetLeft =
+        active.getBoundingClientRect().left -
+        stage.getBoundingClientRect().left +
+        stage.scrollLeft -
+        (stage.clientWidth - active.offsetWidth) / 2;
+      stage.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: reduce ? "auto" : "smooth",
+      });
+    },
+    [reduce],
+  );
+
+  // Auto-advance only drives the mobile/fallback track. Once the
+  // desktop scroll-pin takes over, the user's own scrolling is the
+  // "auto-advance" — a timer fighting it would feel broken.
   useEffect(() => {
-    if (paused || reduce) return;
+    if (paused || reduce || pinned) return;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % SHOWCASE_SLIDES.length);
     }, AUTO_ADVANCE_MS);
     return () => window.clearInterval(timer);
-  }, [paused, reduce]);
+  }, [paused, reduce, pinned]);
 
-  // Horizontal-only centering inside the track. Never use scrollIntoView —
-  // even with block: "nearest" it scrolls the document when the carousel
-  // is below the fold (mount + auto-advance were jumping the homepage).
+  // Mobile/fallback: center the active card in the native horizontal
+  // scroller. Never use scrollIntoView — it can scroll the document.
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const active = track.querySelector<HTMLElement>(
+    if (pinned) return;
+    const stage = stageRef.current;
+    if (!stage) return;
+    const active = stage.querySelector<HTMLElement>(
       `[data-slide-index="${activeIndex}"]`,
     );
     if (!active) return;
-
     const targetLeft =
-      active.offsetLeft - (track.clientWidth - active.offsetWidth) / 2;
-
-    track.scrollTo({
+      active.getBoundingClientRect().left -
+      stage.getBoundingClientRect().left +
+      stage.scrollLeft -
+      (stage.clientWidth - active.offsetWidth) / 2;
+    stage.scrollTo({
       left: Math.max(0, targetLeft),
       behavior: reduce ? "auto" : "smooth",
     });
-  }, [activeIndex, reduce]);
+  }, [activeIndex, reduce, pinned]);
+
+  // Desktop: pin the stage and translate the track by exactly the
+  // scroll distance the user contributes, so the card reveal is a
+  // literal fragment of the page's scroll, not an independent tween.
+  useEffect(() => {
+    if (reduce) return;
+    const section = sectionRef.current;
+    const stage = stageRef.current;
+    const track = trackRef.current;
+    if (!section || !stage || !track) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      setPinned(true);
+      pinnedRef.current = true;
+
+      const distance = () =>
+        Math.max(0, track.scrollWidth - stage.clientWidth);
+
+      const tween = gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${distance()}`,
+          scrub: 1,
+          pin: stage,
+          pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const index = Math.round(self.progress * LAST_INDEX);
+            setActiveIndex((current) => (current === index ? current : index));
+          },
+        },
+      });
+
+      scrollTriggerRef.current = tween.scrollTrigger ?? null;
+
+      return () => {
+        scrollTriggerRef.current = null;
+        tween.scrollTrigger?.kill();
+        tween.kill();
+        gsap.set(track, { clearProps: "x" });
+      };
+    });
+
+    mm.add("(max-width: 1023px)", () => {
+      setPinned(false);
+      pinnedRef.current = false;
+      return () => {};
+    });
+
+    return () => mm.revert();
+  }, [reduce]);
 
   const activeSlide = SHOWCASE_SLIDES[activeIndex];
 
   return (
     <section
+      ref={sectionRef}
       id="how-it-works"
       aria-label="How GameLens works"
-      className="relative scroll-mt-28 overflow-hidden py-24 sm:py-32"
+      className="relative scroll-mt-28 overflow-hidden py-24 sm:py-32 lg:py-0"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -76,7 +193,7 @@ export function InteractiveShowcase() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,oklch(0.5_0.08_185_/_0.12),transparent_60%)]"
       />
 
-      <Container>
+      <Container className="lg:pt-24">
         <Reveal className="mb-10 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <h2 className="font-display text-4xl leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl">
@@ -127,7 +244,7 @@ export function InteractiveShowcase() {
         </Reveal>
       </Container>
 
-      <div className="relative">
+      <div className="relative lg:flex lg:h-screen lg:items-center">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
@@ -137,25 +254,32 @@ export function InteractiveShowcase() {
           className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16"
         />
 
+        {/* Stage: scrolls natively on mobile; becomes the pinned,
+            clipped viewport on lg+ while `track` is transformed. */}
         <div
-          ref={trackRef}
-          className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5"
+          ref={stageRef}
+          className="scrollbar-none w-full overflow-x-auto lg:overflow-hidden"
         >
-          {SHOWCASE_SLIDES.map((slide, index) => (
-            <div key={slide.id} data-slide-index={index} className="snap-center">
-              <ShowcaseSlide
-                slide={slide}
-                isActive={index === activeIndex}
-                onSelect={() => goTo(index)}
-              />
-            </div>
-          ))}
+          <div
+            ref={trackRef}
+            className="flex snap-x snap-mandatory gap-4 px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5 lg:snap-none lg:will-change-transform"
+          >
+            {SHOWCASE_SLIDES.map((slide, index) => (
+              <div key={slide.id} data-slide-index={index} className="snap-center">
+                <ShowcaseSlide
+                  slide={slide}
+                  isActive={index === activeIndex}
+                  onSelect={() => goTo(index)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <Container>
+      <Container className="lg:pb-16">
         <div
-          className="mt-8 flex items-center justify-center gap-2"
+          className="mt-8 flex items-center justify-center gap-2 lg:mt-0"
           role="tablist"
           aria-label="Showcase slides"
         >
