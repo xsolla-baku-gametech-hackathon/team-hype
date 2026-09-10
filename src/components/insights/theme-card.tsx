@@ -1,12 +1,8 @@
 import { ThemeBar } from "@/components/insights/theme-bar";
+import { ViewEvidenceButton } from "@/components/evidence/view-evidence-button";
+import { CONFIDENCE_LABEL } from "@/lib/analysis/labels";
 import { formatNumber } from "@/lib/utils/format";
-import type { ConfidenceLevel, ReviewTheme } from "@/lib/analysis/types";
-
-const CONFIDENCE_LABEL: Record<ConfidenceLevel, string> = {
-  high: "High confidence",
-  medium: "Medium confidence",
-  low: "Low confidence",
-};
+import type { ReviewTheme } from "@/lib/analysis/types";
 
 interface ThemeCardProps {
   theme: ReviewTheme;
@@ -38,6 +34,13 @@ export function ThemeCard({ theme }: ThemeCardProps) {
         </span>
         <span>{CONFIDENCE_LABEL[theme.confidence]}</span>
       </div>
+
+      <ViewEvidenceButton
+        themeId={theme.id}
+        variant="outline"
+        size="sm"
+        className="mt-4 w-full"
+      />
     </div>
   );
 }

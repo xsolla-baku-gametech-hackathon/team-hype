@@ -9,8 +9,10 @@ import { ReportHeader } from "@/components/analysis/report-header";
 import { ReportSection } from "@/components/analysis/report-section";
 import { ReportSectionNav } from "@/components/analysis/report-section-nav";
 import { Badge } from "@/components/ui/badge";
+import { EvidenceProvider } from "@/components/evidence/evidence-context";
 import { CompetitorGrid } from "@/components/games/competitor-grid";
 import { ThemeColumn } from "@/components/insights/theme-column";
+import { OpportunityList } from "@/components/opportunities/opportunity-list";
 import { ANALYSIS_STAGES } from "@/lib/analysis/constants";
 import { groupThemesBySentiment } from "@/lib/analysis/scoring";
 import type { AnalysisReport } from "@/lib/analysis/types";
@@ -71,39 +73,53 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
     const { positive, complaint } = groupThemesBySentiment(report.themes);
 
     return (
-      <div className="flex flex-col gap-12 pb-20">
-        <ReportSectionNav />
+      <EvidenceProvider themes={report.themes} evidence={report.evidence}>
+        <div className="flex flex-col gap-12 pb-20">
+          <ReportSectionNav />
 
-        <ReportSection id="overview" title="Overview">
-          <div className="flex flex-col gap-8 pt-4">
-            <ReportHeader report={report} />
-            <MetricsRow summary={report.summary} />
-          </div>
-        </ReportSection>
+          <ReportSection id="overview" title="Overview">
+            <div className="flex flex-col gap-8 pt-4">
+              <ReportHeader report={report} />
+              <MetricsRow summary={report.summary} />
+            </div>
+          </ReportSection>
 
-        <ReportSection
-          id="competitors"
-          title="Comparable Games"
-          description="Steam titles closest to your concept, ranked by semantic similarity."
-        >
-          <CompetitorGrid games={report.comparableGames} />
-        </ReportSection>
+          <ReportSection
+            id="competitors"
+            title="Comparable Games"
+            description="Steam titles closest to your concept, ranked by semantic similarity."
+          >
+            <CompetitorGrid games={report.comparableGames} />
+          </ReportSection>
 
-        <ReportSection
-          id="player-voice"
-          title="Player Voice"
-          description="Recurring patterns mined from player reviews across every comparable game."
-        >
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <ThemeColumn title="Players Love" sentiment="positive" themes={positive} />
-            <ThemeColumn
-              title="Players Complain About"
-              sentiment="complaint"
-              themes={complaint}
-            />
-          </div>
-        </ReportSection>
-      </div>
+          <ReportSection
+            id="player-voice"
+            title="Player Voice"
+            description="Recurring patterns mined from player reviews across every comparable game."
+          >
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              <ThemeColumn
+                title="Players Love"
+                sentiment="positive"
+                themes={positive}
+              />
+              <ThemeColumn
+                title="Players Complain About"
+                sentiment="complaint"
+                themes={complaint}
+              />
+            </div>
+          </ReportSection>
+
+          <ReportSection
+            id="opportunities"
+            title="Market Opportunities"
+            description="Ranked, evidence-backed recommendations synthesized from the patterns above."
+          >
+            <OpportunityList opportunities={report.opportunities} />
+          </ReportSection>
+        </div>
+      </EvidenceProvider>
     );
   }
 

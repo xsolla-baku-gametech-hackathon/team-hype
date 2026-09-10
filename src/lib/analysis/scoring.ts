@@ -1,5 +1,6 @@
 import type {
   ComparableGame,
+  EvidenceReview,
   MarketDensity,
   MarketLandscape,
   ReviewTheme,
@@ -72,4 +73,12 @@ export function groupThemesBySentiment(
     positive: themes.filter((theme) => theme.sentiment === "positive"),
     complaint: themes.filter((theme) => theme.sentiment === "complaint"),
   };
+}
+
+/** The evidence reviews backing a single theme (and, by extension, any opportunity derived from it). */
+export function getEvidenceForTheme(
+  evidence: readonly EvidenceReview[],
+  themeId: string,
+): readonly EvidenceReview[] {
+  return evidence.filter((review) => review.themeId === themeId);
 }
