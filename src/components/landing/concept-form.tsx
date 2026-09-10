@@ -191,7 +191,7 @@ export function ConceptForm() {
                 />
                 <p
                   id={`${conceptFieldId}-hint`}
-                  className="mt-2 text-[11px] text-white/30"
+                  className="mt-2 text-[11px] text-white/55"
                 >
                   Minimum {MIN_CONCEPT_LENGTH} characters for a useful scan.
                 </p>
