@@ -9,6 +9,10 @@ interface AnalysisPageProps {
   params: Promise<{ id: string }>;
 }
 
+export function generateStaticParams() {
+  return [{ id: "demo" }];
+}
+
 export async function generateMetadata({
   params,
 }: AnalysisPageProps): Promise<Metadata> {
