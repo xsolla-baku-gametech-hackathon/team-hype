@@ -29,6 +29,7 @@ import {
   conceptFormSchema,
 } from "@/lib/analysis/types";
 import { VISUAL_ASSETS } from "@/lib/visual-assets";
+import { DEMO_ANALYSIS_PATH } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
 const PLATFORM_FILTERS = [
@@ -112,7 +113,7 @@ export function ConceptForm() {
         if (genre) params.set("genre", genre);
         const query = params.toString();
         router.push(
-          query ? `/analysis/demo?${query}` : "/analysis/demo",
+          query ? `${DEMO_ANALYSIS_PATH}?${query}` : DEMO_ANALYSIS_PATH,
         );
       }, 1100),
     ];

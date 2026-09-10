@@ -17,7 +17,7 @@ import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { Magnetic } from "@/components/shared/magnetic";
 import { Button } from "@/components/ui/button";
-import { PRIMARY_NAV, APP_NAME } from "@/lib/site-config";
+import { APP_NAME, DEMO_ANALYSIS_PATH, PRIMARY_NAV } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -110,7 +110,7 @@ export function SiteHeader() {
 
   const activeHref =
     pathname.startsWith("/analysis")
-      ? "/analysis/demo"
+      ? DEMO_ANALYSIS_PATH
       : PRIMARY_NAV.find((item) => item.href.startsWith("/#") && pathname === "/")
         ? null
         : null;
@@ -167,7 +167,7 @@ export function SiteHeader() {
             <div className="relative flex items-center gap-0.5 rounded-full border border-white/[0.06] bg-white/[0.03] p-1">
               {PRIMARY_NAV.map((item) => {
                 const isActive =
-                  item.href === "/analysis/demo"
+                  item.href === DEMO_ANALYSIS_PATH
                     ? pathname.startsWith("/analysis")
                     : activeHref === item.href;
                 const isHot = hovered === item.href || isActive;
@@ -209,7 +209,7 @@ export function SiteHeader() {
               size="sm"
               className="hidden text-white/50 hover:bg-white/[0.05] hover:text-white sm:inline-flex"
             >
-              <Link href="/analysis/demo">View Demo</Link>
+              <Link href={DEMO_ANALYSIS_PATH}>View Demo</Link>
             </Button>
 
             <Magnetic strength={0.24}>
@@ -265,7 +265,7 @@ export function SiteHeader() {
               <nav aria-label="Mobile" className="flex flex-col gap-0.5">
                 {PRIMARY_NAV.map((item, index) => {
                   const isActive =
-                    item.href === "/analysis/demo"
+                    item.href === DEMO_ANALYSIS_PATH
                       ? pathname.startsWith("/analysis")
                       : activeHref === item.href;
 

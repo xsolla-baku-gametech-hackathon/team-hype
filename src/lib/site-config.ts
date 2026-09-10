@@ -16,13 +16,16 @@ export const APP_DESCRIPTION =
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
+
 export interface NavItem {
   readonly label: string;
   readonly href: string;
 }
 
+export const DEMO_ANALYSIS_PATH = "/analysis/demo";
+
 export const PRIMARY_NAV: readonly NavItem[] = [
   { label: "Product", href: "/#product" },
   { label: "How it works", href: "/#how-it-works" },
-  { label: "Demo", href: "/analysis/demo" },
+  { label: "Demo", href: DEMO_ANALYSIS_PATH },
 ];

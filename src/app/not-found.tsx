@@ -3,6 +3,7 @@ import { SearchX } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
+import { DEMO_ANALYSIS_PATH } from "@/lib/site-config";
 
 export default function NotFound() {
   return (
@@ -18,7 +19,7 @@ export default function NotFound() {
           <Link href="/">Go home</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/analysis/demo">View demo</Link>
+          <Link href={DEMO_ANALYSIS_PATH}>View demo</Link>
         </Button>
       </div>
     </Container>
