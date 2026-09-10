@@ -31,10 +31,18 @@ export function SiteHeader() {
   const [menuPathname, setMenuPathname] = useState(pathname);
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
+  const [hash, setHash] = useState("");
   const dockRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, [pathname]);
 
   // Close the mobile menu when the route changes (render-time sync —
   // avoids setState-in-effect cascading render warnings).
@@ -111,8 +119,8 @@ export function SiteHeader() {
   const activeHref =
     pathname.startsWith("/analysis")
       ? DEMO_ANALYSIS_PATH
-      : PRIMARY_NAV.find((item) => item.href.startsWith("/#") && pathname === "/")
-        ? null
+      : pathname === "/" && hash
+        ? (PRIMARY_NAV.find((item) => item.href === `/${hash}`)?.href ?? null)
         : null;
 
   return (
