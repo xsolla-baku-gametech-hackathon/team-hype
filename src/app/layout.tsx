@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteGrain } from "@/components/shared/site-grain";
 import { SmoothScroll } from "@/components/shared/smooth-scroll";
-import { APP_DESCRIPTION, APP_NAME } from "@/lib/site-config";
+import { APP_DESCRIPTION, APP_NAME, APP_URL } from "@/lib/site-config";
 
 import "./globals.css";
 
@@ -28,11 +28,23 @@ const fontMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: {
     default: `${APP_NAME} - Market Intelligence for Game Developers`,
     template: `%s - ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: `${APP_NAME} - Market Intelligence for Game Developers`,
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: `${APP_NAME} - Market Intelligence for Game Developers`,
+    description: APP_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

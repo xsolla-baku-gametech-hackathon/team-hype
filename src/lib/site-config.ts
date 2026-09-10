@@ -12,6 +12,10 @@ export const APP_TAGLINE =
 export const APP_DESCRIPTION =
   "Turn your game idea into evidence-backed market intelligence from real Steam players.";
 
+/** Canonical site origin for metadata absolute URLs (OG, etc.). */
+export const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export interface NavItem {
   readonly label: string;
   readonly href: string;
