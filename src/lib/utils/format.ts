@@ -15,3 +15,8 @@ export function formatCompactNumber(value: number): string {
 export function formatPercentage(ratio: number): string {
   return `${Math.round(ratio * 100)}%`;
 }
+
+/** `"moderate"` → `"Moderate"`. For single-word enum-style labels only. */
+export function capitalize(value: string): string {
+  return value.length === 0 ? value : `${value[0].toUpperCase()}${value.slice(1)}`;
+}

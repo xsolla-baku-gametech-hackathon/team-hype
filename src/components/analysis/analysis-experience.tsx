@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { AnalysisProgress } from "@/components/analysis/analysis-progress";
 import { CompetitorRevealList } from "@/components/analysis/competitor-reveal-list";
+import { ExecutiveSummary } from "@/components/analysis/executive-summary";
+import { MarketLandscapePanel } from "@/components/analysis/market-landscape-panel";
 import { MetricsRow } from "@/components/analysis/metrics-row";
 import { ReportHeader } from "@/components/analysis/report-header";
 import { ReportSection } from "@/components/analysis/report-section";
@@ -81,6 +83,8 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
             <div className="flex flex-col gap-8 pt-4">
               <ReportHeader report={report} />
               <MetricsRow summary={report.summary} />
+              <ExecutiveSummary summary={report.executiveSummary} />
+              <MarketLandscapePanel landscape={report.marketLandscape} />
             </div>
           </ReportSection>
 
