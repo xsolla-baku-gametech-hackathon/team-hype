@@ -19,7 +19,8 @@ const STAGES = [
 ] as const;
 
 /**
- * Large typographic storytelling strip between pipeline and conversion.
+ * Large typographic storytelling strip. Animates opacity only on scrub
+ * (tiny Y) so lines never stack into each other during scroll.
  */
 export function PipelineStrip() {
   const reduce = useReducedMotion();
@@ -28,27 +29,49 @@ export function PipelineStrip() {
   useEffect(() => {
     if (reduce || !root.current) return;
 
-    const ctx = gsap.context(() => {
-      const words = gsap.utils.toArray<HTMLElement>(".pipeline-word");
-      gsap.fromTo(
-        words,
-        { opacity: 0.18, y: 24 },
-        {
-          opacity: 1,
-          y: 0,
-          stagger: 0.12,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top 75%",
-            end: "center 40%",
-            scrub: 0.6,
-          },
-        },
-      );
-    }, root);
+    let ctx: gsap.Context | undefined;
+    let cancelled = false;
 
-    return () => ctx.revert();
+    async function setup() {
+      // Wait for fonts so line boxes are stable before measuring triggers.
+      if (typeof document !== "undefined" && "fonts" in document) {
+        try {
+          await document.fonts.ready;
+        } catch {
+          // ignore
+        }
+      }
+      if (cancelled || !root.current) return;
+
+      ctx = gsap.context(() => {
+        const lines = gsap.utils.toArray<HTMLElement>(".pipeline-word");
+        gsap.fromTo(
+          lines,
+          { opacity: 0.22, y: 8 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top 80%",
+              end: "center 45%",
+              scrub: 0.5,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+        ScrollTrigger.refresh();
+      }, root);
+    }
+
+    void setup();
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, [reduce]);
 
   return (
@@ -67,16 +90,16 @@ export function PipelineStrip() {
             The pitch-room path, compressed into one read.
           </p>
         </Reveal>
-        <ol className="mt-10 flex flex-col gap-4 sm:gap-5">
+        <ol className="mt-10 flex flex-col gap-5 sm:gap-6 lg:gap-7">
           {STAGES.map((stage, index) => (
             <li
               key={stage}
               className="pipeline-word flex items-baseline gap-4 sm:gap-6"
             >
-              <span className="font-mono text-xs text-accent/70 sm:text-sm">
+              <span className="shrink-0 font-mono text-xs text-accent/70 sm:text-sm">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="font-display text-3xl leading-none font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
+              <span className="font-display text-3xl leading-[1.12] font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl">
                 {stage}
               </span>
             </li>

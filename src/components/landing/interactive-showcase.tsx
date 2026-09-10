@@ -79,30 +79,32 @@ export function InteractiveShowcase() {
       <Container>
         <Reveal className="mb-10 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <h2 className="font-display text-4xl leading-none font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl">
               Pipeline
             </h2>
             <p className="mt-4 max-w-[42ch] text-base text-pretty text-white/45 sm:text-lg">
-              From concept brief to evidence-backed decisions — five stages that stay
+              From concept brief to evidence-backed decisions. Five stages that stay
               traceable to real Steam player voice.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={activeSlide.id}
-                initial={reduce ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="hidden max-w-xs text-right text-sm text-white/40 md:block"
-              >
-                <span className="font-mono text-accent/80">{activeSlide.step}</span>
-                <span className="mx-2 text-white/20">/</span>
-                {activeSlide.title}
-              </motion.p>
-            </AnimatePresence>
+            <div className="relative hidden min-h-[2.5rem] min-w-[12rem] max-w-xs items-center justify-end md:flex">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.p
+                  key={activeSlide.id}
+                  initial={reduce ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-x-0 top-0 text-right text-sm leading-snug text-pretty text-white/40"
+                >
+                  <span className="font-mono text-accent/80">{activeSlide.step}</span>
+                  <span className="mx-2 text-white/20">/</span>
+                  {activeSlide.title}
+                </motion.p>
+              </AnimatePresence>
+            </div>
             <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"

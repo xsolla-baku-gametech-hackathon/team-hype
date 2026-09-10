@@ -9,8 +9,8 @@ import { Container } from "@/components/layout/container";
 import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE } from "@/lib/site-config";
 
 /**
- * Immersive first viewport — overlapping brand + orbit composition.
- * Showcase and form live in dedicated sections below.
+ * Unified immersive first viewport - one continuous stage, not a
+ * left-text / right-image split. Copy overlays the wide visual field.
  */
 export function HeroSection() {
   const reduce = useReducedMotion();
@@ -19,62 +19,60 @@ export function HeroSection() {
   return (
     <section
       id="product"
-      className="relative min-h-[100dvh] overflow-hidden pb-16 sm:pb-20"
+      className="relative min-h-[100dvh] overflow-hidden pb-10 sm:pb-14"
     >
       <BackgroundEffects />
 
-      <Container className="relative grid min-h-[calc(100dvh-5.5rem)] items-center gap-10 pt-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6 lg:pt-6">
-        <div className="relative z-10 max-w-xl lg:max-w-none">
+      <Container className="relative flex min-h-[calc(100dvh-5.5rem)] flex-col justify-end pt-6 sm:pt-8 lg:justify-center lg:pt-4">
+        {/* Full-bleed visual stage sits behind / beside copy as one canvas */}
+        <div className="pointer-events-none absolute inset-x-0 top-[8%] bottom-[8%] sm:top-[4%] sm:bottom-[6%] lg:inset-y-0">
+          <div className="pointer-events-auto h-full w-full lg:ml-[18%] lg:w-[82%]">
+            <HeroOrbit className="h-full" />
+          </div>
+        </div>
+
+        <div className="relative z-20 max-w-xl pb-6 pt-[42vh] sm:pb-8 sm:pt-[38vh] lg:max-w-[28rem] lg:pt-0 lg:pb-4">
           <motion.p
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease }}
-            className="font-display text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.9] font-bold tracking-[-0.04em] text-white"
+            transition={{ duration: 0.65, ease }}
+            className="font-display text-[clamp(2.75rem,8vw,5.25rem)] leading-[1.02] font-bold tracking-[-0.04em] text-balance text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.65)]"
           >
             {APP_NAME}
           </motion.p>
 
           <motion.h1
-            initial={reduce ? false : { opacity: 0, y: 18 }}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.08, ease }}
-            className="mt-5 max-w-[16ch] text-2xl leading-tight font-medium tracking-tight text-balance text-white/90 sm:text-3xl lg:text-[2rem]"
+            transition={{ duration: 0.7, delay: 0.08, ease }}
+            className="mt-4 max-w-[16ch] text-2xl leading-snug font-medium tracking-tight text-balance text-white/92 sm:mt-5 sm:text-3xl lg:text-[1.9rem]"
           >
             {APP_TAGLINE}
           </motion.h1>
 
           <motion.p
-            initial={reduce ? false : { opacity: 0, y: 16 }}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.16, ease }}
-            className="mt-4 max-w-[38ch] text-base leading-relaxed text-pretty text-white/50 sm:text-[17px]"
+            transition={{ duration: 0.65, delay: 0.16, ease }}
+            className="mt-4 max-w-[36ch] text-base leading-relaxed text-pretty text-white/55 sm:text-[17px]"
           >
             {APP_DESCRIPTION}
           </motion.p>
 
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.24, ease }}
-            className="mt-8"
+            transition={{ duration: 0.6, delay: 0.24, ease }}
+            className="mt-7 sm:mt-8"
           >
             <CTAButtons />
           </motion.div>
         </div>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.12, ease }}
-          className="relative z-0 mx-auto w-full max-w-[520px] lg:max-w-none lg:translate-x-4 lg:-translate-y-2"
-        >
-          <HeroOrbit className="mx-auto" />
-        </motion.div>
       </Container>
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent"
       />
     </section>
   );

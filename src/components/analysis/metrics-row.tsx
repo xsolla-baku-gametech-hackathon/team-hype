@@ -54,6 +54,7 @@ function AnimatedValue({ value }: { value: number }) {
 
 /** Oversized metric strip — GameTech command console energy. */
 export function MetricsRow({ summary }: MetricsRowProps) {
+  const reduce = useReducedMotion();
   const metrics: readonly Metric[] = [
     { value: summary.comparableGamesCount, label: "Comparable Games" },
     { value: summary.reviewsAnalyzedCount, label: "Reviews Analyzed" },
@@ -66,12 +67,12 @@ export function MetricsRow({ summary }: MetricsRowProps) {
       {metrics.map((metric, index) => (
         <motion.div
           key={metric.label}
-          initial={{ opacity: 0, y: 16 }}
+          initial={reduce ? false : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.35 }}
           transition={{
-            duration: 0.55,
-            delay: index * 0.06,
+            duration: 0.45,
+            delay: index * 0.05,
             ease: [0.16, 1, 0.3, 1],
           }}
           className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel"
