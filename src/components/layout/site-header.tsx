@@ -125,7 +125,7 @@ export function SiteHeader() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            "pointer-events-auto relative flex h-[3.4rem] items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 transition-[background,box-shadow,border-color] duration-500 sm:h-14 sm:px-4",
+            "pointer-events-auto relative flex h-[3.4rem] items-center justify-between gap-3 rounded-2xl border px-3 transition-[background,box-shadow,border-color] duration-500 sm:h-14 sm:px-4",
             scrolled
               // backdrop-blur only kicks in once scrolled — at the top of
               // the page (hero, busiest frame) the header stays cheap
@@ -134,20 +134,20 @@ export function SiteHeader() {
               : "border-white/[0.08] bg-[#07090d]/55 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.05)]",
           )}
         >
-          {/* Cursor spotlight wash */}
-          {!reduce ? (
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-80"
-              style={{ background: spotlight }}
-            />
-          ) : null}
-
-          {/* Subtle top scan line */}
+          {/* Decorative clip layer — keeps washes inside the dock without
+              clipping :focus-visible rings on interactive controls. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent"
-          />
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
+          >
+            {!reduce ? (
+              <motion.div
+                className="absolute inset-0 opacity-80"
+                style={{ background: spotlight }}
+              />
+            ) : null}
+            <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+          </div>
 
           <div className="relative z-10 flex min-w-0 items-center">
             <Link
