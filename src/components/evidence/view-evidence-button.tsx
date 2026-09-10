@@ -12,9 +12,9 @@ export function ViewEvidenceButton({ themeId, ...props }: ViewEvidenceButtonProp
 
   return (
     <Button
+      {...props}
       aria-haspopup="dialog"
       onClick={() => openEvidence(themeId)}
-      {...props}
     >
       View Evidence
     </Button>
