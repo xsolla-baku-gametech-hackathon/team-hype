@@ -25,12 +25,15 @@ export function SiteFooter() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-white focus-visible:text-white"
               >
                 {item.label}
               </Link>
             ))}
-            <Link href="/#analyze" className="transition-colors hover:text-white">
+            <Link
+              href="/#analyze"
+              className="transition-colors hover:text-white focus-visible:text-white"
+            >
               Analyze
             </Link>
           </nav>
