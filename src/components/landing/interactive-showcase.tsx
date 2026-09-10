@@ -348,7 +348,7 @@ export function InteractiveShowcase() {
       <Container className="lg:pb-16">
         <div
           className="mt-8 flex items-center justify-center gap-2 lg:mt-0"
-          role="tablist"
+          role="group"
           aria-label="Showcase slides"
           onKeyDown={(event) => {
             let delta: number | null = null;
@@ -368,18 +368,17 @@ export function InteractiveShowcase() {
               (activeIndex + delta + SHOWCASE_SLIDES.length) %
               SHOWCASE_SLIDES.length;
             goTo(next);
-            const tabs =
-              event.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]');
-            tabs[next]?.focus();
+            const dots =
+              event.currentTarget.querySelectorAll<HTMLElement>("button");
+            dots[next]?.focus();
           }}
         >
           {SHOWCASE_SLIDES.map((slide, index) => (
             <button
               key={slide.id}
               type="button"
-              role="tab"
               tabIndex={index === activeIndex ? 0 : -1}
-              aria-selected={index === activeIndex}
+              aria-current={index === activeIndex ? "true" : undefined}
               aria-label={`Show ${slide.title}`}
               onClick={() => goTo(index)}
               className="group flex size-10 items-center justify-center rounded-full"
