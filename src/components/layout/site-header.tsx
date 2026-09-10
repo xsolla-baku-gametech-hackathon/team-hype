@@ -177,6 +177,7 @@ export function SiteHeader() {
                     <Link
                       href={item.href}
                       onMouseEnter={() => setHovered(item.href)}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "relative z-10 rounded-full px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300",
                         isHot ? "text-white" : "text-white/45 hover:text-white/80",
@@ -258,7 +259,13 @@ export function SiteHeader() {
               className="pointer-events-auto mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#07090d]/95 p-2.5 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.9)] backdrop-blur-2xl md:hidden"
             >
               <nav aria-label="Mobile" className="flex flex-col gap-0.5">
-                {PRIMARY_NAV.map((item, index) => (
+                {PRIMARY_NAV.map((item, index) => {
+                  const isActive =
+                    item.href === "/analysis/demo"
+                      ? pathname.startsWith("/analysis")
+                      : activeHref === item.href;
+
+                  return (
                   <motion.div
                     key={item.href}
                     initial={{ opacity: 0, x: -8 }}
@@ -267,13 +274,15 @@ export function SiteHeader() {
                   >
                     <Link
                       href={item.href}
+                      aria-current={isActive ? "page" : undefined}
                       className="block rounded-xl px-3.5 py-3 text-sm text-white/70 transition-colors hover:bg-white/[0.04] hover:text-white"
                       onClick={() => setOpen(false)}
                     >
                       {item.label}
                     </Link>
                   </motion.div>
-                ))}
+                  );
+                })}
                 <Link
                   href="/#analyze"
                   className="mt-1 block rounded-xl bg-accent px-3.5 py-3 text-center text-sm font-medium text-accent-foreground"
