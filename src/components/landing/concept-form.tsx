@@ -112,8 +112,9 @@ export function ConceptForm() {
     ];
   }
 
+  const trimmedLength = concept.trim().length;
   const remaining = MAX_CONCEPT_LENGTH - concept.length;
-  const meetsMinimum = concept.trim().length >= MIN_CONCEPT_LENGTH;
+  const meetsMinimum = trimmedLength >= MIN_CONCEPT_LENGTH;
 
   return (
     <section
@@ -168,7 +169,7 @@ export function ConceptForm() {
                       remaining < 80 ? "text-opportunity" : "text-white/30",
                     )}
                   >
-                    {concept.length}/{MAX_CONCEPT_LENGTH}
+                    {trimmedLength}/{MAX_CONCEPT_LENGTH}
                   </span>
                 </div>
 
