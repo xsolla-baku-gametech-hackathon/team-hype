@@ -12,6 +12,24 @@ export const STEAM_REQUEST_TIMEOUT_MS = 8_000;
 export const DEFAULT_REVIEWS_PER_PAGE = 100;
 export const DEFAULT_REVIEW_LANGUAGE = "english";
 
+/** Subset of Steam storefront review language codes we accept from clients. */
+export const STEAM_REVIEW_LANGUAGES = [
+  "all",
+  "english",
+  "spanish",
+  "french",
+  "german",
+  "portuguese",
+  "brazilian",
+  "russian",
+  "schinese",
+  "tchinese",
+  "japanese",
+  "koreana",
+] as const;
+
+export type SteamReviewLanguage = (typeof STEAM_REVIEW_LANGUAGES)[number];
+
 export const STEAM_REVIEW_TYPES = ["all", "positive", "negative"] as const;
 export type SteamReviewType = (typeof STEAM_REVIEW_TYPES)[number];
 

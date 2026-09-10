@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   STEAM_PURCHASE_TYPES,
+  STEAM_REVIEW_LANGUAGES,
   STEAM_REVIEW_TYPES,
   type SteamPurchaseType,
   type SteamReviewType,
@@ -95,7 +96,7 @@ export interface FetchSteamReviewsParams {
   readonly cursor?: string;
   readonly reviewType?: SteamReviewType;
   readonly purchaseType?: SteamPurchaseType;
-  readonly language?: string;
+  readonly language?: SteamReviewLanguage;
   readonly numPerPage?: number;
 }
 
@@ -118,5 +119,5 @@ export const requestReviewsQuerySchema = z.object({
   cursor: z.string().optional(),
   reviewType: z.enum(STEAM_REVIEW_TYPES).optional(),
   purchaseType: z.enum(STEAM_PURCHASE_TYPES).optional(),
-  language: z.string().optional(),
+  language: z.enum(STEAM_REVIEW_LANGUAGES).optional(),
 });
