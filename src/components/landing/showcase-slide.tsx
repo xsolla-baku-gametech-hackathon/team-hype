@@ -92,9 +92,9 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-[15px] font-semibold tracking-tight text-white">
+          <span className="block text-[15px] font-semibold tracking-tight text-white">
             {slide.title}
-          </h3>
+          </span>
           <p className="text-sm leading-relaxed text-white/50">{slide.description}</p>
         </div>
 
