@@ -12,10 +12,13 @@ export function normalizeSteamReview(raw: RawSteamReview): SteamReview {
     votedUp: raw.voted_up,
     votesUp: raw.votes_up,
     votesFunny: raw.votes_funny,
-    weightedVoteScore:
-      typeof raw.weighted_vote_score === "number"
-        ? raw.weighted_vote_score
-        : Number.parseFloat(raw.weighted_vote_score),
+    weightedVoteScore: (() => {
+      const parsed =
+        typeof raw.weighted_vote_score === "number"
+          ? raw.weighted_vote_score
+          : Number.parseFloat(raw.weighted_vote_score);
+      return Number.isFinite(parsed) ? parsed : 0;
+    })(),
     language: raw.language,
     steamPurchase: raw.steam_purchase,
     receivedForFree: raw.received_for_free,
