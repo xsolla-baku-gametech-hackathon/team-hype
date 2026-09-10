@@ -107,7 +107,13 @@ export function ConceptForm() {
       window.setTimeout(() => setStatusIndex(2), 900),
       window.setTimeout(() => {
         submitTimersRef.current = [];
-        router.push("/analysis/demo");
+        const params = new URLSearchParams();
+        if (platform) params.set("platform", platform);
+        if (genre) params.set("genre", genre);
+        const query = params.toString();
+        router.push(
+          query ? `/analysis/demo?${query}` : "/analysis/demo",
+        );
       }, 1100),
     ];
   }
