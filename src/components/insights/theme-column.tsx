@@ -26,11 +26,13 @@ export function ThemeColumn({ title, sentiment, themes }: ThemeColumnProps) {
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <ul className="flex list-none flex-col gap-3 p-0">
         {themes.map((theme) => (
-          <ThemeCard key={theme.id} theme={theme} />
+          <li key={theme.id}>
+            <ThemeCard theme={theme} />
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
