@@ -55,6 +55,7 @@ export function ReportSectionNav() {
           <Link
             key={link.id}
             href={`#${link.id}`}
+            aria-current={active === link.id ? "true" : undefined}
             className={cn(
               "shrink-0 rounded-md px-3 py-1.5 transition-colors duration-300",
               active === link.id
