@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { AnalysisProgress } from "@/components/analysis/analysis-progress";
@@ -14,6 +14,7 @@ import { ReportHeader } from "@/components/analysis/report-header";
 import { ReportSection } from "@/components/analysis/report-section";
 import { ReportSectionNav } from "@/components/analysis/report-section-nav";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { EvidenceProvider } from "@/components/evidence/evidence-context";
 import { CompetitorGrid } from "@/components/games/competitor-grid";
 import { ThemeColumn } from "@/components/insights/theme-column";
@@ -70,6 +71,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [revealedGameCount, setRevealedGameCount] = useState(0);
   const [isReportReady, setIsReportReady] = useState(false);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     const timeouts: ReturnType<typeof setTimeout>[] = [];
@@ -99,11 +101,21 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
     }
 
     timeouts.push(setTimeout(() => setIsReportReady(true), totalDurationMs));
+    timeoutsRef.current = timeouts;
 
     return () => {
       timeouts.forEach(clearTimeout);
+      timeoutsRef.current = [];
     };
   }, [report.comparableGames.length]);
+
+  function skipToReport() {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    setRevealedGameCount(report.comparableGames.length);
+    setActiveStageIndex(ANALYSIS_STAGES.length - 1);
+    setIsReportReady(true);
+  }
 
   if (isReportReady) {
     const { positive, complaint } = groupThemesBySentiment(report.themes);
@@ -217,6 +229,9 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
         <CompetitorRevealList
           games={report.comparableGames.slice(0, revealedGameCount)}
         />
+        <Button type="button" variant="ghost" size="sm" onClick={skipToReport}>
+          Skip to report
+        </Button>
       </div>
     </div>
   );
