@@ -275,7 +275,12 @@ export function SiteHeader() {
                     <Link
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
-                      className="block rounded-xl px-3.5 py-3 text-sm text-white/70 transition-colors hover:bg-white/[0.04] hover:text-white"
+                      className={cn(
+                        "block rounded-xl px-3.5 py-3 text-sm transition-colors",
+                        isActive
+                          ? "bg-white/[0.06] text-white"
+                          : "text-white/70 hover:bg-white/[0.04] hover:text-white",
+                      )}
                       onClick={() => setOpen(false)}
                     >
                       {item.label}
