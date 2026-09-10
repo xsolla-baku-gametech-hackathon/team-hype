@@ -55,7 +55,7 @@ export default function RootLayout({
       lang="en"
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
-      <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
+      <body className="flex min-h-dvh flex-col bg-background font-sans antialiased">
         <SmoothScroll>
           <a
             href="#main"
