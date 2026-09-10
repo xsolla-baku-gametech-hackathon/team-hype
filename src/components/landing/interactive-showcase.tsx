@@ -34,8 +34,10 @@ const LAST_INDEX = SHOWCASE_SLIDES.length - 1;
 export function InteractiveShowcase() {
   const reduce = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
   const [pinned, setPinned] = useState(false);
+  const paused = userPaused || hoverPaused;
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const pinWrapRef = useRef<HTMLDivElement>(null);
@@ -220,12 +222,12 @@ export function InteractiveShowcase() {
       id="how-it-works"
       aria-label={`How ${APP_NAME} works`}
       className="relative scroll-mt-28 overflow-hidden py-24 sm:py-32 lg:py-0"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
+      onMouseEnter={() => setHoverPaused(true)}
+      onMouseLeave={() => setHoverPaused(false)}
+      onFocusCapture={() => setHoverPaused(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setPaused(false);
+          setHoverPaused(false);
         }
       }}
     >
@@ -273,6 +275,19 @@ export function InteractiveShowcase() {
                 </AnimatePresence>
               </div>
               <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setUserPaused((value) => !value)}
+                  className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-2 text-xs text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                  aria-pressed={userPaused}
+                  aria-label={
+                    userPaused
+                      ? "Play showcase auto-advance"
+                      : "Pause showcase auto-advance"
+                  }
+                >
+                  {userPaused ? "Play" : "Pause"}
+                </button>
                 <button
                   type="button"
                   onClick={() => goTo(activeIndex - 1)}
