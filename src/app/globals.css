@@ -69,6 +69,23 @@
     scroll-behavior: smooth;
   }
 
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -88,6 +105,13 @@
     color: var(--foreground);
     font-family: var(--font-sans);
     font-feature-settings: "tnum" 1;
+  }
+
+  /* Fixed HUD dock clearance for in-page anchors */
+  #analyze,
+  #product,
+  #how-it-works {
+    scroll-margin-top: 5.5rem;
   }
 
   ::selection {
