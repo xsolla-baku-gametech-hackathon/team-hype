@@ -343,7 +343,7 @@ export function ConceptForm() {
           </Reveal>
 
           {/* Spacer column — visual stage paints behind/through this area */}
-          <div className="pointer-events-none relative hidden min-h-[420px] lg:block xl:min-h-[520px]" aria-hidden="true">
+          <div className="pointer-events-none relative hidden min-h-[420px] lg:block xl:min-h-[520px]">
             <p className="relative z-10 max-w-[28ch] text-sm leading-relaxed text-pretty text-white/40">
               Demo reports always resolve to a fixture-backed analysis so the pitch
               never depends on Steam staying up.
