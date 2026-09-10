@@ -69,7 +69,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       const hash = url.hash;
       if (!hash || hash === "#") return;
 
-      const el = document.querySelector(hash);
+      let id: string;
+      try {
+        id = decodeURIComponent(hash.slice(1));
+      } catch {
+        return;
+      }
+      if (!id) return;
+
+      const el = document.getElementById(id);
       if (!(el instanceof HTMLElement)) return;
 
       event.preventDefault();
