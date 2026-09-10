@@ -12,13 +12,13 @@ import "./globals.css";
 const fontDisplay = Syne({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700"],
 });
 
 const fontBody = Outfit({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const fontMono = JetBrains_Mono({
