@@ -11,7 +11,11 @@ export function ViewEvidenceButton({ themeId, ...props }: ViewEvidenceButtonProp
   const { openEvidence } = useEvidenceDrawer();
 
   return (
-    <Button onClick={() => openEvidence(themeId)} {...props}>
+    <Button
+      aria-haspopup="dialog"
+      onClick={() => openEvidence(themeId)}
+      {...props}
+    >
       View Evidence
     </Button>
   );
