@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
+import { Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -17,6 +17,7 @@ import { Magnetic } from "@/components/shared/magnetic";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   CONCEPT_PLACEHOLDER,
@@ -287,33 +288,27 @@ export function ConceptForm() {
                   <Label htmlFor={genreGroupId} className="text-[13px] text-white/70">
                     Genre
                   </Label>
-                  <div className="relative mt-2.5">
-                    <select
-                      id={genreGroupId}
-                      name="genre"
-                      autoComplete="off"
-                      value={genre}
-                      onChange={(event) => {
-                        setGenre(event.target.value);
-                        if (error) setError(null);
-                      }}
-                      className="w-full appearance-none rounded-lg border border-white/[0.08] bg-black/20 px-3.5 py-2.5 pr-9 text-sm text-white/85 backdrop-blur-sm transition-colors duration-300 outline-none focus-visible:border-accent/55 focus-visible:shadow-[0_0_0_3px_oklch(0.78_0.13_185_/_0.18)]"
-                    >
-                      {GENRE_FILTERS.map((option) => (
-                        <option
-                          key={option.label}
-                          value={option.value}
-                          className="bg-[#0c1118] text-white"
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-white/45"
-                      aria-hidden="true"
-                    />
-                  </div>
+                  <Select
+                    id={genreGroupId}
+                    name="genre"
+                    autoComplete="off"
+                    value={genre}
+                    onChange={(event) => {
+                      setGenre(event.target.value);
+                      if (error) setError(null);
+                    }}
+                    className="mt-2.5 border-white/[0.08] bg-black/20 text-white/85 backdrop-blur-sm focus-visible:border-accent/55 focus-visible:shadow-[0_0_0_3px_oklch(0.78_0.13_185_/_0.18)] focus-visible:ring-0"
+                  >
+                    {GENRE_FILTERS.map((option) => (
+                      <option
+                        key={option.label}
+                        value={option.value}
+                        className="bg-[#0c1118] text-white"
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
                 </div>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
