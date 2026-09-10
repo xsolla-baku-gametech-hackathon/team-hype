@@ -18,7 +18,7 @@ export function ReportSection({
   className,
 }: ReportSectionProps) {
   return (
-    <section id={id} className={cn("scroll-mt-28", className)}>
+    <section id={id} className={cn("scroll-mt-28 print:scroll-mt-0", className)}>
       <div className="mb-6 max-w-2xl">
         <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           {title}
