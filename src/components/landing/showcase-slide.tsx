@@ -46,7 +46,7 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
       aria-pressed={isActive}
       aria-label={`${slide.title}: ${slide.description}`}
       className={cn(
-        "group relative w-[min(78vw,300px)] shrink-0 snap-center overflow-hidden rounded-xl border text-left transition-[box-shadow,opacity] duration-500 sm:w-[340px]",
+        "group relative w-[min(78vw,300px)] shrink-0 cursor-pointer snap-center overflow-hidden rounded-xl border text-left transition-[box-shadow,opacity] duration-500 sm:w-[340px]",
         isActive
           ? "border-accent/30 bg-[#0c1118]/95 shadow-[0_24px_80px_-28px_rgba(0,0,0,0.9),0_0_40px_-20px_var(--accent-glow)]"
           : "border-white/[0.07] bg-[#0a0e14]/70 opacity-55 hover:opacity-85",
