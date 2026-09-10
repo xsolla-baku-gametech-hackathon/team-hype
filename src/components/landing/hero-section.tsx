@@ -35,23 +35,23 @@ export function HeroSection() {
 
       <Container className="relative z-20 flex min-h-[100dvh] flex-col justify-end pb-16 pt-28 sm:pb-20 sm:pt-32 lg:justify-center lg:pb-24 lg:pt-24">
         <div className="max-w-xl lg:max-w-[30rem]">
-          <motion.p
+          <motion.h1
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease }}
             className="font-display text-[clamp(3.25rem,10vw,6rem)] leading-[0.95] font-bold tracking-[-0.045em] text-balance text-white drop-shadow-[0_12px_48px_rgba(0,0,0,0.75)]"
           >
             {APP_NAME}
-          </motion.p>
+          </motion.h1>
 
-          <motion.h1
+          <motion.p
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.08, ease }}
             className="mt-5 max-w-[16ch] text-2xl leading-snug font-medium tracking-tight text-balance text-white/92 sm:mt-6 sm:text-3xl lg:text-[2rem]"
           >
             {APP_TAGLINE}
-          </motion.h1>
+          </motion.p>
 
           <motion.p
             initial={reduce ? false : { opacity: 0, y: 10 }}
