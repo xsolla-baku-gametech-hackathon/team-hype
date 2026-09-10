@@ -33,6 +33,7 @@ export function SiteHeader() {
   const [hovered, setHovered] = useState<string | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
   // Close the mobile menu when the route changes (render-time sync —
@@ -53,15 +54,51 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) return;
 
+    const frame = window.requestAnimationFrame(() => {
+      const firstLink =
+        mobileNavRef.current?.querySelector<HTMLElement>("a[href]");
+      firstLink?.focus();
+    });
+
+    function getFocusable(): HTMLElement[] {
+      const nodes: HTMLElement[] = [];
+      if (menuButtonRef.current) nodes.push(menuButtonRef.current);
+      mobileNavRef.current
+        ?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")
+        .forEach((node) => nodes.push(node));
+      return nodes;
+    }
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setOpen(false);
         menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
       }
     }
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   function onDockMove(event: MouseEvent<HTMLDivElement>) {
@@ -212,6 +249,7 @@ export function SiteHeader() {
         <AnimatePresence>
           {open ? (
             <motion.div
+              ref={mobileNavRef}
               id="mobile-nav"
               initial={{ opacity: 0, y: -10, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
