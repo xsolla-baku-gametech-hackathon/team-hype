@@ -46,7 +46,11 @@ function AnimatedValue({ value }: { value: number }) {
   }, [spring]);
 
   return (
-    <span ref={ref} className="tabular-nums">
+    <span
+      ref={ref}
+      className="tabular-nums"
+      aria-label={formatNumber(value)}
+    >
       {reduce ? formatNumber(value) : "0"}
     </span>
   );
