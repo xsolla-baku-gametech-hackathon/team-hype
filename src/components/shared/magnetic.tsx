@@ -7,7 +7,7 @@ import {
   useSpring,
   type HTMLMotionProps,
 } from "motion/react";
-import { useRef, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
@@ -27,7 +27,16 @@ export function Magnetic({
   ...props
 }: MagneticProps) {
   const reduce = useReducedMotion();
+  const [coarsePointer, setCoarsePointer] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia("(pointer: coarse)");
+    const sync = () => setCoarsePointer(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 260, damping: 22, mass: 0.4 });
@@ -47,7 +56,7 @@ export function Magnetic({
     y.set(0);
   }
 
-  if (reduce) {
+  if (reduce || coarsePointer) {
     return <div className={className}>{children}</div>;
   }
 
