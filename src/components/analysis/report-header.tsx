@@ -22,9 +22,12 @@ export function ReportHeader({ report }: ReportHeaderProps) {
         {platformLabel && <Badge variant="neutral">{platformLabel}</Badge>}
         {genreLabel && <Badge variant="neutral">{genreLabel}</Badge>}
       </div>
-      <p className="max-w-3xl text-lg leading-relaxed text-foreground">
+      {/* The report's only h1 — every section below uses h2, so the page
+       * has exactly one top-level heading regardless of which analysis
+       * id is being viewed. */}
+      <h1 className="max-w-3xl text-lg leading-relaxed text-foreground">
         {report.concept}
-      </p>
+      </h1>
     </div>
   );
 }
