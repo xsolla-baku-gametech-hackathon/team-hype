@@ -196,7 +196,11 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
   }
 
   return (
-    <div className="relative flex min-h-[70dvh] flex-col items-center justify-center gap-10 py-20 text-center">
+    <div
+      role="status"
+      aria-busy="true"
+      className="relative flex min-h-[70dvh] flex-col items-center justify-center gap-10 py-20 text-center"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,oklch(0.55_0.1_185_/_0.14),transparent_65%)]"
