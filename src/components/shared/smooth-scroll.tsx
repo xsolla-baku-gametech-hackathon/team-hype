@@ -74,7 +74,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
       event.preventDefault();
       window.history.pushState(null, "", hash);
-      lenis.scrollTo(el, { offset: -88 });
+      lenis.scrollTo(el, {
+        offset: -88,
+        onComplete: () => {
+          if (!el.hasAttribute("tabindex")) {
+            el.setAttribute("tabindex", "-1");
+          }
+          el.focus({ preventScroll: true });
+        },
+      });
     }
 
     document.addEventListener("click", onAnchorClick);
