@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ExportReportButton } from "@/components/analysis/export-report-button";
+
 interface ReportSectionLink {
   readonly id: string;
   readonly label: string;
@@ -23,17 +25,20 @@ export function ReportSectionNav() {
   return (
     <nav
       aria-label="Report sections"
-      className="sticky top-16 z-30 -mx-6 flex gap-5 overflow-x-auto border-b border-border bg-background/80 px-6 py-3 text-sm text-muted-foreground backdrop-blur-md sm:-mx-8 sm:px-8"
+      className="sticky top-16 z-30 -mx-6 flex items-center justify-between gap-4 overflow-x-auto border-b border-border bg-background/80 px-6 py-3 text-sm text-muted-foreground backdrop-blur-md print:hidden sm:-mx-8 sm:px-8"
     >
-      {SECTION_LINKS.map((link) => (
-        <Link
-          key={link.id}
-          href={`#${link.id}`}
-          className="shrink-0 transition-colors hover:text-foreground"
-        >
-          {link.label}
-        </Link>
-      ))}
+      <div className="flex gap-5">
+        {SECTION_LINKS.map((link) => (
+          <Link
+            key={link.id}
+            href={`#${link.id}`}
+            className="shrink-0 transition-colors hover:text-foreground"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+      <ExportReportButton />
     </nav>
   );
 }

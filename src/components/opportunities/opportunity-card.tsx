@@ -20,7 +20,7 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
   ];
 
   return (
-    <article className="rounded-lg border border-border bg-surface p-6 sm:p-8">
+    <article className="rounded-lg border border-border bg-surface p-6 print:break-inside-avoid sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-baseline gap-3">
           <span className="text-3xl font-semibold tabular-nums text-muted-foreground/40">

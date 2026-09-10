@@ -7,6 +7,8 @@ import { CompetitorRevealList } from "@/components/analysis/competitor-reveal-li
 import { ExecutiveSummary } from "@/components/analysis/executive-summary";
 import { MarketLandscapePanel } from "@/components/analysis/market-landscape-panel";
 import { MetricsRow } from "@/components/analysis/metrics-row";
+import { PrintEvidenceAppendix } from "@/components/analysis/print-evidence-appendix";
+import { PrintRecommendations } from "@/components/analysis/print-recommendations";
 import { ReportHeader } from "@/components/analysis/report-header";
 import { ReportSection } from "@/components/analysis/report-section";
 import { ReportSectionNav } from "@/components/analysis/report-section-nav";
@@ -122,6 +124,9 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
           >
             <OpportunityList opportunities={report.opportunities} />
           </ReportSection>
+
+          <PrintRecommendations opportunities={report.opportunities} />
+          <PrintEvidenceAppendix themes={report.themes} evidence={report.evidence} />
         </div>
       </EvidenceProvider>
     );

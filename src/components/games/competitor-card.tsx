@@ -15,7 +15,7 @@ interface CompetitorCardProps {
 
 export function CompetitorCard({ game }: CompetitorCardProps) {
   return (
-    <article className="flex flex-col overflow-hidden rounded-lg border border-border bg-surface">
+    <article className="flex flex-col overflow-hidden rounded-lg border border-border bg-surface print:break-inside-avoid">
       <GameCover appId={game.appId} name={game.name} />
 
       <div className="flex flex-1 flex-col gap-3 p-4">

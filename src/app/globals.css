@@ -85,3 +85,30 @@
     outline-offset: 2px;
   }
 }
+
+/*
+ * Export Report (spec section 20) reuses the on-screen report markup for
+ * printing/"Save as PDF" instead of a separate PDF renderer. Redefining
+ * the same tokens here — rather than sprinkling `print:` variants across
+ * every component — is what makes every surface flip to a print-safe
+ * light theme for free, since every component already reads from these
+ * variables.
+ */
+@media print {
+  :root {
+    --background: oklch(1 0 0);
+    --surface: oklch(0.98 0 0);
+    --surface-hover: oklch(0.95 0 0);
+    --border: oklch(0 0 0 / 12%);
+    --border-strong: oklch(0 0 0 / 22%);
+    --foreground: oklch(0.15 0 0);
+    --muted-foreground: oklch(0.4 0 0);
+  }
+
+  /* Interactive controls (CTAs, "View Evidence" triggers) have no
+   * meaning on paper — only the "Export Report" button itself would
+   * render, and it's redundant once printing has already started. */
+  [data-slot="button"] {
+    display: none !important;
+  }
+}

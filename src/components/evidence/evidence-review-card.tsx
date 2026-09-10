@@ -9,7 +9,7 @@ interface EvidenceReviewCardProps {
 
 export function EvidenceReviewCard({ review }: EvidenceReviewCardProps) {
   return (
-    <article className="rounded-lg border border-border bg-background/40 p-4">
+    <article className="rounded-lg border border-border bg-background/40 p-4 print:break-inside-avoid">
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-medium text-foreground">
           {review.gameName}

@@ -11,7 +11,7 @@ import { PRIMARY_NAV } from "@/lib/site-config";
  */
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md print:hidden">
       <Container className="flex h-16 items-center justify-between">
         <Link href="/" aria-label="GameLens home">
           <Logo />
