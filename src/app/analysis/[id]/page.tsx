@@ -29,6 +29,7 @@ export async function generateMetadata({
 
   return {
     title: "Analysis Report",
+    alternates: { canonical: `/analysis/${id}` },
     description: `Evidence-backed market intelligence for “${report.concept}” — comparable Steam titles, player themes, and ranked opportunities.`,
   };
 }
