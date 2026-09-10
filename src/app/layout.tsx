@@ -65,7 +65,7 @@ export default function RootLayout({
           </a>
           <SiteGrain />
           <SiteHeader />
-          <main id="main" className="flex-1 pt-[4.75rem] has-[#product]:pt-0 sm:pt-[5.25rem]">
+          <main id="main" tabIndex={-1} className="flex-1 pt-[4.75rem] has-[#product]:pt-0 sm:pt-[5.25rem] outline-none">
             {children}
           </main>
           <SiteFooter />

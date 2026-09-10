@@ -149,8 +149,9 @@ export function ConceptForm() {
           <Reveal>
             <form
               id="analyze"
+              tabIndex={-1}
               onSubmit={handleSubmit}
-              className="relative w-full scroll-mt-28"
+              className="relative w-full scroll-mt-28 outline-none"
               noValidate
             >
               <div className="rounded-2xl border border-white/12 bg-[#0a0e14]/45 p-5 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.08),0_32px_80px_-40px_rgba(0,0,0,0.85)] backdrop-blur-2xl sm:p-7">
