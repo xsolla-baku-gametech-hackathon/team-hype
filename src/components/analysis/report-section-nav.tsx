@@ -48,9 +48,9 @@ export function ReportSectionNav() {
   return (
     <nav
       aria-label="Report sections"
-      className="sticky top-16 z-30 -mx-5 flex items-center justify-between gap-4 overflow-x-auto rounded-xl border border-white/[0.07] bg-[#0a0c10]/85 px-4 py-2.5 text-sm text-muted-foreground backdrop-blur-xl print:hidden sm:-mx-8 sm:px-5"
+      className="scrollbar-none sticky top-16 z-30 -mx-5 flex min-w-0 items-center justify-between gap-4 overflow-x-auto rounded-xl border border-white/[0.07] bg-[#0a0c10]/85 px-4 py-2.5 text-sm text-muted-foreground backdrop-blur-xl print:hidden sm:-mx-8 sm:px-5"
     >
-      <div className="flex gap-1">
+      <div className="flex min-w-0 gap-1">
         {SECTION_LINKS.map((link) => (
           <Link
             key={link.id}
