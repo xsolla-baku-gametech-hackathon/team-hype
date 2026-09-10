@@ -1,5 +1,6 @@
 import { ViewEvidenceButton } from "@/components/evidence/view-evidence-button";
 import { Badge } from "@/components/ui/badge";
+import { CONFIDENCE_LABEL } from "@/lib/analysis/labels";
 import { formatNumber } from "@/lib/utils/format";
 import type { MarketOpportunity } from "@/lib/analysis/types";
 
@@ -36,7 +37,7 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
           </h3>
         </div>
         <Badge variant={opportunity.confidence === "high" ? "opportunity" : "neutral"}>
-          {opportunity.confidence.toUpperCase()} CONFIDENCE
+          {CONFIDENCE_LABEL[opportunity.confidence]}
         </Badge>
       </div>
 
