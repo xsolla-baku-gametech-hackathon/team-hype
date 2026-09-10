@@ -1,106 +1,81 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { BackgroundEffects } from "@/components/landing/background-effects";
-import { ConceptForm } from "@/components/landing/concept-form";
 import { CTAButtons } from "@/components/landing/cta-buttons";
-import { InteractiveShowcase } from "@/components/landing/interactive-showcase";
-import { TRUST_SIGNALS } from "@/components/landing/showcase-data";
+import { HeroOrbit } from "@/components/landing/hero-orbit";
 import { Container } from "@/components/layout/container";
 import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE } from "@/lib/site-config";
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
 /**
- * Landing above-the-fold: identity, promise, CTAs, and the interactive
- * product-story showcase that sells the pipeline in one glance.
+ * Immersive first viewport — overlapping brand + orbit composition.
+ * Showcase and form live in dedicated sections below.
  */
 export function HeroSection() {
+  const reduce = useReducedMotion();
+  const ease = [0.16, 1, 0.3, 1] as const;
+
   return (
-    <section id="product" className="relative overflow-hidden pb-20 sm:pb-28">
+    <section
+      id="product"
+      className="relative min-h-[100dvh] overflow-hidden pb-16 sm:pb-20"
+    >
       <BackgroundEffects />
 
-      <Container className="relative flex flex-col items-center pt-14 text-center sm:pt-20">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease }}
-          className="mb-5 text-[11px] font-medium tracking-[0.28em] text-sky-300/75 uppercase sm:mb-6"
-        >
-          {APP_NAME} · GameTech intelligence
-        </motion.p>
+      <Container className="relative grid min-h-[calc(100dvh-5.5rem)] items-center gap-10 pt-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6 lg:pt-6">
+        <div className="relative z-10 max-w-xl lg:max-w-none">
+          <motion.p
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease }}
+            className="font-display text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.9] font-bold tracking-[-0.04em] text-white"
+          >
+            {APP_NAME}
+          </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.08, ease }}
-          className="max-w-4xl text-4xl font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl"
-        >
-          {APP_TAGLINE}
-        </motion.h1>
+          <motion.h1
+            initial={reduce ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.08, ease }}
+            className="mt-5 max-w-[16ch] text-2xl leading-tight font-medium tracking-tight text-balance text-white/90 sm:text-3xl lg:text-[2rem]"
+          >
+            {APP_TAGLINE}
+          </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.18, ease }}
-          className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:mt-6 sm:text-lg"
-        >
-          {APP_DESCRIPTION}
-        </motion.p>
+          <motion.p
+            initial={reduce ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.16, ease }}
+            className="mt-4 max-w-[38ch] text-base leading-relaxed text-pretty text-white/50 sm:text-[17px]"
+          >
+            {APP_DESCRIPTION}
+          </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.28, ease }}
-          className="mt-8 sm:mt-10"
-        >
-          <CTAButtons />
-        </motion.div>
-
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[12px] tracking-wide text-white/35"
-        >
-          {TRUST_SIGNALS.map((signal, index) => (
-            <li key={signal} className="inline-flex items-center gap-3">
-              {index > 0 ? (
-                <span aria-hidden="true" className="size-1 rounded-full bg-white/20" />
-              ) : null}
-              {signal}
-            </li>
-          ))}
-        </motion.ul>
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.24, ease }}
+            className="mt-8"
+          >
+            <CTAButtons />
+          </motion.div>
+        </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.38, ease }}
-          className="mt-14 w-full max-w-6xl sm:mt-16"
+          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.12, ease }}
+          className="relative z-0 mx-auto w-full max-w-[520px] lg:max-w-none lg:translate-x-4 lg:-translate-y-2"
         >
-          <InteractiveShowcase />
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55, ease }}
-          className="mt-8 max-w-xl text-sm text-white/40"
-        >
-          Describe → compare → understand players → uncover gaps → decide with evidence.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.5, ease }}
-          className="mt-14 w-full sm:mt-16"
-        >
-          <ConceptForm />
+          <HeroOrbit className="mx-auto" />
         </motion.div>
       </Container>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+      />
     </section>
   );
 }

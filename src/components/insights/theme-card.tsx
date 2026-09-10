@@ -13,10 +13,10 @@ export function ThemeCard({ theme }: ThemeCardProps) {
     theme.sentiment === "positive" ? "text-positive" : "text-negative";
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-4 print:break-inside-avoid">
+    <div className="rounded-xl border border-white/[0.08] bg-surface p-4 transition-[border-color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-white/16 print:break-inside-avoid">
       <div className="flex items-baseline justify-between gap-3">
         <h4 className="text-sm font-medium text-foreground">{theme.label}</h4>
-        <span className={`text-lg font-semibold tabular-nums ${sentimentColor}`}>
+        <span className={`font-display text-lg font-semibold tabular-nums ${sentimentColor}`}>
           {theme.percentage}%
         </span>
       </div>

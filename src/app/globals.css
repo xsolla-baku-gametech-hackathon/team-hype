@@ -2,39 +2,39 @@
 @import "tw-animate-css";
 
 /*
- * GameLens design tokens.
- *
- * The product is dark-first by design (see design direction: "near black /
- * charcoal" background, restrained semantic colors, one primary accent).
- * There is intentionally no light theme for the MVP — every surface is
- * defined once, directly in :root, instead of toggling a `.dark` class.
+ * GameLens — GameTech cinematic design tokens.
+ * Dark-only. One accent (electric teal). Semantic colors stay sparse.
  */
 :root {
-  --background: oklch(0.11 0.005 264);
-  --surface: oklch(0.17 0.006 264);
-  --surface-hover: oklch(0.21 0.007 264);
-  --border: oklch(1 0 0 / 9%);
-  --border-strong: oklch(1 0 0 / 16%);
+  --background: oklch(0.1 0.01 250);
+  --surface: oklch(0.155 0.012 250);
+  --surface-elevated: oklch(0.19 0.014 250);
+  --surface-hover: oklch(0.22 0.015 250);
+  --border: oklch(1 0 0 / 8%);
+  --border-strong: oklch(1 0 0 / 14%);
 
-  --foreground: oklch(0.97 0.002 264);
-  --muted-foreground: oklch(0.64 0.01 264);
+  --foreground: oklch(0.97 0.005 250);
+  --muted-foreground: oklch(0.62 0.015 250);
 
-  /* Primary product accent — cool violet for CTAs, active states, links. */
-  --accent: oklch(0.66 0.17 275);
-  --accent-foreground: oklch(0.99 0 0);
+  /* Primary accent — electric teal (lens signal), not violet SaaS default */
+  --accent: oklch(0.78 0.13 185);
+  --accent-foreground: oklch(0.14 0.02 250);
+  --accent-glow: oklch(0.72 0.12 185 / 45%);
 
-  /* Semantic signal colors, used sparingly for review sentiment and
-   * opportunity confidence — never for decoration. */
-  --positive: oklch(0.72 0.15 155);
-  --negative: oklch(0.68 0.19 25);
-  --opportunity: oklch(0.79 0.14 80);
+  --positive: oklch(0.74 0.14 155);
+  --negative: oklch(0.68 0.18 25);
+  --opportunity: oklch(0.8 0.13 80);
 
-  --radius: 0.625rem;
+  --radius: 0.5rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
@@ -44,18 +44,20 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-glow: var(--accent-glow);
 
   --color-positive: var(--positive);
   --color-negative: var(--negative);
   --color-opportunity: var(--opportunity);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.4);
-  --radius-xl: calc(var(--radius) * 1.8);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
 }
 
 @layer base {
@@ -65,6 +67,20 @@
 
   html {
     scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   body {
@@ -85,28 +101,79 @@
   }
 }
 
-/*
- * Export Report (spec section 20) reuses the on-screen report markup for
- * printing/"Save as PDF" instead of a separate PDF renderer. Redefining
- * the same tokens here — rather than sprinkling `print:` variants across
- * every component — is what makes every surface flip to a print-safe
- * light theme for free, since every component already reads from these
- * variables.
- */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .ease-out-expo {
+    transition-timing-function: var(--ease-out-expo);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 32px -8px var(--accent-glow);
+  }
+
+  .panel-bevel {
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 8%),
+      0 24px 64px -40px oklch(0 0 0 / 80%);
+  }
+
+  .hud-grid {
+    background-image:
+      linear-gradient(to right, oklch(1 0 0 / 3.5%) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 3.5%) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Fixed film grain — pointer-events none, not on scrolling containers */
+.site-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 @media print {
   :root {
     --background: oklch(1 0 0);
     --surface: oklch(0.98 0 0);
+    --surface-elevated: oklch(0.96 0 0);
     --surface-hover: oklch(0.95 0 0);
     --border: oklch(0 0 0 / 12%);
     --border-strong: oklch(0 0 0 / 22%);
     --foreground: oklch(0.15 0 0);
     --muted-foreground: oklch(0.4 0 0);
+    --accent: oklch(0.45 0.08 185);
+    --accent-foreground: oklch(1 0 0);
   }
 
-  /* Interactive controls (CTAs, "View Evidence" triggers) have no
-   * meaning on paper — only the "Export Report" button itself would
-   * render, and it's redundant once printing has already started. */
+  .site-grain {
+    display: none !important;
+  }
+
   [data-slot="button"] {
     display: none !important;
   }

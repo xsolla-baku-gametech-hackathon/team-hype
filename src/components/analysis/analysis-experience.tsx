@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { AnalysisProgress } from "@/components/analysis/analysis-progress";
 import { CompetitorRevealList } from "@/components/analysis/competitor-reveal-list";
@@ -20,18 +21,14 @@ import { OpportunityList } from "@/components/opportunities/opportunity-list";
 import { ANALYSIS_STAGES } from "@/lib/analysis/constants";
 import { groupThemesBySentiment } from "@/lib/analysis/scoring";
 import type { AnalysisReport } from "@/lib/analysis/types";
+import { VISUAL_ASSETS } from "@/lib/visual-assets";
 
 interface AnalysisExperienceProps {
   report: AnalysisReport;
 }
 
-/**
- * Owns the transition from the simulated progress screen to the report
- * shell. Timing is entirely local/mocked for this stage — once a real
- * analysis pipeline exists, this is the component that would swap the
- * fixed timers for actual stage/status events from the server.
- */
 export function AnalysisExperience({ report }: AnalysisExperienceProps) {
+  const reduce = useReducedMotion();
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [revealedGameCount, setRevealedGameCount] = useState(0);
   const [isReportReady, setIsReportReady] = useState(false);
@@ -49,9 +46,6 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
       elapsed += stage.durationMs;
     }
 
-    // Reveal comparable games gradually across the middle of the
-    // timeline so the "finding comparable games" stage feels alive
-    // instead of a static checklist.
     const revealStartMs = ANALYSIS_STAGES[0]?.durationMs ?? 0;
     const revealEndMs = totalDurationMs - (ANALYSIS_STAGES.at(-1)?.durationMs ?? 0);
     const gameCount = report.comparableGames.length;
@@ -78,11 +72,16 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
 
     return (
       <EvidenceProvider themes={report.themes} evidence={report.evidence}>
-        <div className="flex flex-col gap-12 pb-20">
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-14 pb-24"
+        >
           <ReportSectionNav />
 
           <ReportSection id="overview" title="Overview">
-            <div className="flex flex-col gap-8 pt-4">
+            <div className="flex flex-col gap-10 pt-4">
               <ReportHeader report={report} />
               <MetricsRow summary={report.summary} />
               <ExecutiveSummary summary={report.executiveSummary} />
@@ -125,27 +124,58 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
             <OpportunityList opportunities={report.opportunities} />
           </ReportSection>
 
+          <section
+            id="evidence"
+            className="scroll-mt-28 rounded-xl border border-dashed border-accent/25 bg-accent/[0.04] px-5 py-6 sm:px-7"
+          >
+            <h2 className="font-display text-xl font-semibold tracking-tight text-foreground">
+              Evidence drawer
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Open any theme or opportunity with View Evidence to inspect the
+              source Steam reviews that back the claim. Print export includes the
+              full evidence appendix.
+            </p>
+          </section>
+
           <PrintRecommendations opportunities={report.opportunities} />
           <PrintEvidenceAppendix themes={report.themes} evidence={report.evidence} />
-        </div>
+        </motion.div>
       </EvidenceProvider>
     );
   }
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 py-20 text-center">
+    <div className="relative flex min-h-[70dvh] flex-col items-center justify-center gap-10 py-20 text-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,oklch(0.55_0.1_185_/_0.14),transparent_65%)]"
+      />
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={VISUAL_ASSETS.reportCommand.path}
+        alt=""
+        className="pointer-events-none absolute top-16 size-40 opacity-40"
+        onError={(event) => {
+          event.currentTarget.style.display = "none";
+        }}
+      />
+
       <div className="flex flex-col items-center gap-3">
         <Badge variant="accent">Analyzing your concept</Badge>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="font-display max-w-lg text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Finding what players already think
         </h1>
       </div>
 
-      <AnalysisProgress stages={ANALYSIS_STAGES} activeIndex={activeStageIndex} />
+      <div className="w-full max-w-md rounded-xl border border-white/10 bg-surface/80 p-6 text-left panel-bevel">
+        <AnalysisProgress stages={ANALYSIS_STAGES} activeIndex={activeStageIndex} />
+      </div>
 
       <div className="flex flex-col items-center gap-3">
         {revealedGameCount > 0 && (
-          <p className="text-xs text-muted-foreground">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
             {revealedGameCount} of {report.comparableGames.length} comparable
             games found
           </p>

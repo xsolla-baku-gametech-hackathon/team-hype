@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { ExportReportButton } from "@/components/analysis/export-report-button";
+import { cn } from "@/lib/utils/cn";
 
 interface ReportSectionLink {
   readonly id: string;
@@ -15,24 +19,48 @@ const SECTION_LINKS: readonly ReportSectionLink[] = [
   { id: "evidence", label: "Evidence" },
 ];
 
-/**
- * Plain in-page anchor links rather than a scroll-spy tab bar — every
- * section this points to is added incrementally across stages, and a
- * simple anchor list degrades gracefully (a no-op scroll) for sections
- * that don't exist yet instead of erroring.
- */
 export function ReportSectionNav() {
+  const [active, setActive] = useState("overview");
+
+  useEffect(() => {
+    const sections = SECTION_LINKS.map((link) =>
+      document.getElementById(link.id),
+    ).filter(Boolean) as HTMLElement[];
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) {
+          setActive(visible.target.id);
+        }
+      },
+      { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.35, 0.6] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <nav
       aria-label="Report sections"
-      className="sticky top-16 z-30 -mx-6 flex items-center justify-between gap-4 overflow-x-auto border-b border-border bg-background/80 px-6 py-3 text-sm text-muted-foreground backdrop-blur-md print:hidden sm:-mx-8 sm:px-8"
+      className="sticky top-16 z-30 -mx-5 flex items-center justify-between gap-4 overflow-x-auto rounded-xl border border-white/[0.07] bg-[#0a0c10]/85 px-4 py-2.5 text-sm text-muted-foreground backdrop-blur-xl print:hidden sm:-mx-8 sm:px-5"
     >
-      <div className="flex gap-5">
+      <div className="flex gap-1">
         {SECTION_LINKS.map((link) => (
           <Link
             key={link.id}
             href={`#${link.id}`}
-            className="shrink-0 transition-colors hover:text-foreground"
+            className={cn(
+              "shrink-0 rounded-md px-3 py-1.5 transition-colors duration-300",
+              active === link.id
+                ? "bg-accent/15 text-accent"
+                : "hover:text-foreground",
+            )}
           >
             {link.label}
           </Link>

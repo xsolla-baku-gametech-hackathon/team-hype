@@ -1,20 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { SHOWCASE_SLIDES } from "@/components/landing/showcase-data";
 import { ShowcaseSlide } from "@/components/landing/showcase-slide";
+import { Reveal } from "@/components/shared/reveal";
+import { Container } from "@/components/layout/container";
 import { cn } from "@/lib/utils/cn";
 
 const AUTO_ADVANCE_MS = 5200;
 
 /**
- * Wide, center-focused product story carousel. Neighbors stay partially
- * visible so the strip reads as a living pipeline, not a single card.
+ * How-it-works: editorial headline + living pipeline carousel.
+ * Preserves slide data, auto-advance, and keyboard/mouse controls.
  */
 export function InteractiveShowcase() {
+  const reduce = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -25,12 +28,12 @@ export function InteractiveShowcase() {
   }, []);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || reduce) return;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % SHOWCASE_SLIDES.length);
     }, AUTO_ADVANCE_MS);
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, [paused, reduce]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -38,11 +41,11 @@ export function InteractiveShowcase() {
     const active = track.querySelector<HTMLElement>(`[data-slide-index="${activeIndex}"]`);
     if (!active) return;
     active.scrollIntoView({
-      behavior: "smooth",
+      behavior: reduce ? "auto" : "smooth",
       inline: "center",
       block: "nearest",
     });
-  }, [activeIndex]);
+  }, [activeIndex, reduce]);
 
   const activeSlide = SHOWCASE_SLIDES[activeIndex];
 
@@ -50,7 +53,7 @@ export function InteractiveShowcase() {
     <section
       id="how-it-works"
       aria-label="How GameLens works"
-      className="relative w-full scroll-mt-28"
+      className="relative scroll-mt-28 overflow-hidden py-24 sm:py-32"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -60,61 +63,73 @@ export function InteractiveShowcase() {
         }
       }}
     >
-      <div className="mb-6 flex items-end justify-between gap-4 px-1 sm:mb-8">
-        <div className="min-w-0 text-left">
-          <p className="text-[11px] font-medium tracking-[0.22em] text-sky-300/70 uppercase">
-            Product story
-          </p>
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={activeSlide.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-1.5 truncate text-sm text-white/55 sm:text-base"
-            >
-              {activeSlide.title}
-              <span className="text-white/25"> — </span>
-              {activeSlide.preview.meta}
-            </motion.p>
-          </AnimatePresence>
-        </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,oklch(0.5_0.08_185_/_0.12),transparent_60%)]"
+      />
 
-        <div className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => goTo(activeIndex - 1)}
-            className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="size-4" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo(activeIndex + 1)}
-            className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="size-4" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
+      <Container>
+        <Reveal className="mb-10 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="font-display text-4xl leading-none font-semibold tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
+              Pipeline
+            </h2>
+            <p className="mt-4 max-w-[42ch] text-base text-pretty text-white/45 sm:text-lg">
+              From concept brief to evidence-backed decisions — five stages that stay
+              traceable to real Steam player voice.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={activeSlide.id}
+                initial={reduce ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="hidden max-w-xs text-right text-sm text-white/40 md:block"
+              >
+                <span className="font-mono text-accent/80">{activeSlide.step}</span>
+                <span className="mx-2 text-white/20">/</span>
+                {activeSlide.title}
+              </motion.p>
+            </AnimatePresence>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => goTo(activeIndex - 1)}
+                className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="size-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => goTo(activeIndex + 1)}
+                className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="size-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </Reveal>
+      </Container>
 
       <div className="relative">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#050507] to-transparent sm:w-20"
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#050507] to-transparent sm:w-20"
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16"
         />
 
         <div
           ref={trackRef}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1rem,calc(50%-170px))] py-4 scrollbar-none sm:gap-5"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5"
         >
           {SHOWCASE_SLIDES.map((slide, index) => (
             <div key={slide.id} data-slide-index={index} className="snap-center">
@@ -128,24 +143,30 @@ export function InteractiveShowcase() {
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-2" role="tablist" aria-label="Showcase slides">
-        {SHOWCASE_SLIDES.map((slide, index) => (
-          <button
-            key={slide.id}
-            type="button"
-            role="tab"
-            aria-selected={index === activeIndex}
-            aria-label={`Show ${slide.title}`}
-            onClick={() => goTo(index)}
-            className={cn(
-              "h-1.5 rounded-full transition-all duration-500",
-              index === activeIndex
-                ? "w-8 bg-accent"
-                : "w-1.5 bg-white/20 hover:bg-white/35",
-            )}
-          />
-        ))}
-      </div>
+      <Container>
+        <div
+          className="mt-8 flex items-center justify-center gap-2"
+          role="tablist"
+          aria-label="Showcase slides"
+        >
+          {SHOWCASE_SLIDES.map((slide, index) => (
+            <button
+              key={slide.id}
+              type="button"
+              role="tab"
+              aria-selected={index === activeIndex}
+              aria-label={`Show ${slide.title}`}
+              onClick={() => goTo(index)}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-500",
+                index === activeIndex
+                  ? "w-8 bg-accent"
+                  : "w-1.5 bg-white/20 hover:bg-white/35",
+              )}
+            />
+          ))}
+        </div>
+      </Container>
     </section>
   );
 }

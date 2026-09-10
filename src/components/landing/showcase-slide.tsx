@@ -7,15 +7,15 @@ import { cn } from "@/lib/utils/cn";
 
 const ACCENT_TEXT: Record<ShowcaseSlideData["accent"], string> = {
   accent: "text-accent",
-  cyan: "text-sky-300",
+  cyan: "text-accent",
   positive: "text-positive",
   negative: "text-negative",
   opportunity: "text-opportunity",
 };
 
 const ACCENT_SURFACE: Record<ShowcaseSlideData["accent"], string> = {
-  accent: "bg-accent/12 border-accent/25",
-  cyan: "bg-sky-400/10 border-sky-300/25",
+  accent: "bg-accent/12 border-accent/30",
+  cyan: "bg-accent/10 border-accent/25",
   positive: "bg-positive/10 border-positive/25",
   negative: "bg-negative/10 border-negative/25",
   opportunity: "bg-opportunity/10 border-opportunity/25",
@@ -23,7 +23,7 @@ const ACCENT_SURFACE: Record<ShowcaseSlideData["accent"], string> = {
 
 const SIGNAL_TONE: Record<ShowcaseSlideData["signals"][number]["tone"], string> = {
   accent: "border-accent/25 bg-accent/10 text-accent",
-  cyan: "border-sky-300/25 bg-sky-400/10 text-sky-200",
+  cyan: "border-accent/20 bg-accent/8 text-accent/90",
   positive: "border-positive/25 bg-positive/10 text-positive",
   negative: "border-negative/25 bg-negative/10 text-negative",
   opportunity: "border-opportunity/25 bg-opportunity/10 text-opportunity",
@@ -35,10 +35,6 @@ interface ShowcaseSlideProps {
   onSelect: () => void;
 }
 
-/**
- * One product-story panel in the hero showcase. Active slide is larger and
- * brighter; neighbors stay readable but intentionally quieter.
- */
 export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps) {
   const Icon = slide.icon;
 
@@ -49,22 +45,24 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
       aria-pressed={isActive}
       aria-label={`${slide.title}: ${slide.description}`}
       className={cn(
-        "group relative w-[min(78vw,300px)] shrink-0 snap-center overflow-hidden rounded-2xl border text-left transition-[box-shadow,opacity] duration-500 sm:w-[340px]",
+        "group relative w-[min(78vw,300px)] shrink-0 snap-center overflow-hidden rounded-xl border text-left transition-[box-shadow,opacity] duration-500 sm:w-[340px]",
         isActive
-          ? "border-white/16 bg-[#0c0c12]/95 shadow-[0_24px_80px_-28px_rgba(0,0,0,0.9),0_0_0_1px_oklch(0.64_0.19_275_/_0.18)]"
-          : "border-white/[0.07] bg-[#0a0a0f]/70 opacity-55 hover:opacity-80",
+          ? "border-accent/30 bg-[#0c1118]/95 shadow-[0_24px_80px_-28px_rgba(0,0,0,0.9),0_0_40px_-20px_var(--accent-glow)]"
+          : "border-white/[0.07] bg-[#0a0e14]/70 opacity-55 hover:opacity-85",
       )}
       animate={{
-        scale: isActive ? 1 : 0.9,
-        y: isActive ? 0 : 14,
+        scale: isActive ? 1 : 0.92,
+        y: isActive ? 0 : 16,
+        rotateY: isActive ? 0 : -4,
       }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      style={{ transformPerspective: 900 }}
     >
       <div
         aria-hidden="true"
         className={cn(
-          "absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent transition-opacity duration-500",
-          isActive ? "opacity-100" : "opacity-30",
+          "absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent transition-opacity duration-500",
+          isActive ? "opacity-100" : "opacity-20",
         )}
       />
 
@@ -72,7 +70,7 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
         <div className="flex items-start justify-between gap-3">
           <div
             className={cn(
-              "flex size-10 items-center justify-center rounded-xl border",
+              "flex size-10 items-center justify-center rounded-lg border",
               ACCENT_SURFACE[slide.accent],
               ACCENT_TEXT[slide.accent],
             )}
@@ -93,7 +91,7 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
 
         <div
           className={cn(
-            "relative mt-auto overflow-hidden rounded-xl border border-white/[0.08] bg-black/40 p-4",
+            "relative mt-auto overflow-hidden rounded-lg border border-white/[0.08] bg-black/35 p-4",
             isActive && "shadow-[inset_0_1px_0_oklch(1_0_0_/_0.06)]",
           )}
         >

@@ -20,10 +20,15 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
   ];
 
   return (
-    <article className="rounded-lg border border-border bg-surface p-6 print:break-inside-avoid sm:p-8">
+    <article className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-surface p-6 panel-bevel print:break-inside-avoid sm:p-8">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-accent via-accent/40 to-transparent"
+      />
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-semibold tabular-nums text-muted-foreground/40">
+          <span className="font-display text-3xl font-semibold tabular-nums text-accent/35">
             #{opportunity.rank}
           </span>
           <h3 className="text-lg font-semibold text-foreground">
@@ -54,8 +59,8 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
 
       <dl className="mt-6 grid gap-5 sm:grid-cols-3">
         {details.map((detail) => (
-          <div key={detail.label}>
-            <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <div key={detail.label} className="rounded-lg bg-black/20 px-3 py-3">
+            <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               {detail.label}
             </dt>
             <dd className="mt-1.5 text-sm leading-relaxed text-foreground">

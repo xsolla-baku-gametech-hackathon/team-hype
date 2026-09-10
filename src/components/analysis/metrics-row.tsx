@@ -1,3 +1,14 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "motion/react";
+
 import { formatNumber } from "@/lib/utils/format";
 import type { AnalysisSummaryMetrics } from "@/lib/analysis/types";
 
@@ -10,7 +21,38 @@ interface Metric {
   readonly label: string;
 }
 
-/** The four top-line numbers every report leads with. */
+function AnimatedValue({ value }: { value: number }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const motionValue = useMotionValue(0);
+  const spring = useSpring(motionValue, { stiffness: 90, damping: 24 });
+
+  useEffect(() => {
+    if (reduce) {
+      motionValue.set(value);
+      return;
+    }
+    if (inView) motionValue.set(value);
+  }, [inView, motionValue, reduce, value]);
+
+  useEffect(() => {
+    const unsubscribe = spring.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = formatNumber(Math.round(latest));
+      }
+    });
+    return unsubscribe;
+  }, [spring]);
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {reduce ? formatNumber(value) : "0"}
+    </span>
+  );
+}
+
+/** Oversized metric strip — GameTech command console energy. */
 export function MetricsRow({ summary }: MetricsRowProps) {
   const metrics: readonly Metric[] = [
     { value: summary.comparableGamesCount, label: "Comparable Games" },
@@ -20,17 +62,31 @@ export function MetricsRow({ summary }: MetricsRowProps) {
   ];
 
   return (
-    <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {metrics.map((metric) => (
-        <div
+    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+      {metrics.map((metric, index) => (
+        <motion.div
           key={metric.label}
-          className="rounded-lg border border-border bg-surface px-4 py-4"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{
+            duration: 0.55,
+            delay: index * 0.06,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel"
         >
-          <dd className="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
-            {formatNumber(metric.value)}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+          <dd className="font-display text-3xl font-semibold tracking-tight text-accent sm:text-4xl">
+            <AnimatedValue value={metric.value} />
           </dd>
-          <dt className="mt-1 text-xs text-muted-foreground">{metric.label}</dt>
-        </div>
+          <dt className="mt-2 text-[11px] tracking-wide text-muted-foreground uppercase sm:text-xs">
+            {metric.label}
+          </dt>
+        </motion.div>
       ))}
     </dl>
   );
