@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
 import {
@@ -73,6 +73,14 @@ export function ConceptForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
+  const submitTimersRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      submitTimersRef.current.forEach((id) => window.clearTimeout(id));
+      submitTimersRef.current = [];
+    };
+  }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -93,15 +101,15 @@ export function ConceptForm() {
     setIsSubmitting(true);
     setStatusIndex(0);
 
-    const timers = [
+    submitTimersRef.current.forEach((id) => window.clearTimeout(id));
+    submitTimersRef.current = [
       window.setTimeout(() => setStatusIndex(1), 450),
       window.setTimeout(() => setStatusIndex(2), 900),
+      window.setTimeout(() => {
+        submitTimersRef.current = [];
+        router.push("/analysis/demo");
+      }, 1100),
     ];
-
-    window.setTimeout(() => {
-      timers.forEach(clearTimeout);
-      router.push("/analysis/demo");
-    }, 1100);
   }
 
   const remaining = MAX_CONCEPT_LENGTH - concept.length;
