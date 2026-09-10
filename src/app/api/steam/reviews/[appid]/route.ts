@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { apiErrorResponse } from "@/lib/http/api-error";
+import { apiErrorResponse, type ApiErrorCode } from "@/lib/http/api-error";
 import { fetchSteamReviews } from "@/lib/steam/client";
 import { requestReviewsQuerySchema, type SteamReviewPage } from "@/lib/steam/types";
 
@@ -12,7 +12,7 @@ interface RouteParams {
  * Timeouts get their own status; every other Steam-side failure is
  * reported as a gateway error since we're proxying a third party.
  */
-function statusForErrorCode(code: string): number {
+function statusForErrorCode(code: ApiErrorCode): number {
   if (code === "INVALID_APP_ID") return 400;
   if (code === "STEAM_TIMEOUT") return 504;
   return 502;
