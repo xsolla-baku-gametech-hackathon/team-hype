@@ -432,6 +432,10 @@ function AnalyzeStage() {
           <img
             src={VISUAL_ASSETS.analyzeGlow.path}
             alt=""
+            loading="lazy"
+            decoding="async"
+            width={1024}
+            height={1024}
             className="w-full scale-[1.1] object-contain opacity-90 drop-shadow-[0_0_80px_oklch(0.55_0.14_260_/_0.45)] sm:scale-[1.15]"
             onError={(event) => {
               event.currentTarget.style.display = "none";
@@ -446,6 +450,10 @@ function AnalyzeStage() {
         <img
           src={VISUAL_ASSETS.supportHexShard.path}
           alt=""
+          loading="lazy"
+          decoding="async"
+          width={512}
+          height={512}
           className="w-full object-contain"
         />
       </div>
