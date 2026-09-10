@@ -208,6 +208,42 @@ export function ConceptForm() {
                     role="radiogroup"
                     aria-labelledby={platformGroupId}
                     className="flex flex-wrap gap-1.5 rounded-lg border border-white/[0.08] bg-black/20 p-1.5 backdrop-blur-sm"
+                    onKeyDown={(event) => {
+                      const keys = [
+                        "ArrowRight",
+                        "ArrowDown",
+                        "ArrowLeft",
+                        "ArrowUp",
+                        "Home",
+                        "End",
+                      ];
+                      if (!keys.includes(event.key)) return;
+
+                      event.preventDefault();
+                      const currentIndex = PLATFORM_FILTERS.findIndex(
+                        (option) => option.value === platform,
+                      );
+                      let nextIndex = currentIndex < 0 ? 0 : currentIndex;
+
+                      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+                        nextIndex = (currentIndex + 1) % PLATFORM_FILTERS.length;
+                      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+                        nextIndex =
+                          (currentIndex - 1 + PLATFORM_FILTERS.length) %
+                          PLATFORM_FILTERS.length;
+                      } else if (event.key === "Home") {
+                        nextIndex = 0;
+                      } else if (event.key === "End") {
+                        nextIndex = PLATFORM_FILTERS.length - 1;
+                      }
+
+                      setPlatform(PLATFORM_FILTERS[nextIndex].value);
+                      const radios =
+                        event.currentTarget.querySelectorAll<HTMLElement>(
+                          '[role="radio"]',
+                        );
+                      radios[nextIndex]?.focus();
+                    }}
                   >
                     {PLATFORM_FILTERS.map((option) => {
                       const Icon = option.icon;
@@ -218,6 +254,7 @@ export function ConceptForm() {
                           type="button"
                           role="radio"
                           aria-checked={selected}
+                          tabIndex={selected ? 0 : -1}
                           onClick={() => setPlatform(option.value)}
                           className={cn(
                             "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm transition-[background-color,color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:flex-none",
