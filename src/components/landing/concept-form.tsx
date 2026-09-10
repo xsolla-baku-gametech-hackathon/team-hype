@@ -167,7 +167,6 @@ export function ConceptForm() {
                       "font-mono text-[11px] tabular-nums",
                       remaining < 80 ? "text-opportunity" : "text-white/30",
                     )}
-                    aria-live="polite"
                   >
                     {concept.length}/{MAX_CONCEPT_LENGTH}
                   </span>
