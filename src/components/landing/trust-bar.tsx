@@ -1,5 +1,3 @@
-"use client";
-
 import { Reveal } from "@/components/shared/reveal";
 import { TRUST_SIGNALS } from "@/components/landing/showcase-data";
 import { Container } from "@/components/layout/container";
