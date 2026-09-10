@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils/cn";
 export function HeroOrbit({ className }: { className?: string }) {
   const reduce = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
+  const [stageActive, setStageActive] = useState(true);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 80, damping: 20 });
@@ -52,11 +53,23 @@ export function HeroOrbit({ className }: { className?: string }) {
     my.set(0);
   }
 
+  useEffect(() => {
+    const node = stageRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStageActive(Boolean(entry?.isIntersecting)),
+      { rootMargin: "10% 0px", threshold: 0.05 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       ref={stageRef}
+      data-active={stageActive ? "true" : "false"}
       className={cn(
-        "relative h-full min-h-[100dvh] w-full overflow-hidden",
+        "hero-stage relative h-full min-h-[100dvh] w-full overflow-hidden",
         className,
       )}
       onMouseMove={onMove}

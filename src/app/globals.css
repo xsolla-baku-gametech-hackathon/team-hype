@@ -281,6 +281,18 @@
     will-change: translate;
   }
 
+  .hero-stage[data-active="false"] .hero-ring-a,
+  .hero-stage[data-active="false"] .hero-ring-b,
+  .hero-stage[data-active="false"] .hero-ring-c,
+  .hero-stage[data-active="false"] .hero-scan,
+  .hero-stage[data-active="false"] .hero-atmosphere,
+  .hero-stage[data-active="false"] .hero-glow-pulse,
+  .hero-stage[data-active="false"] .hero-flow-beam,
+  .hero-stage[data-active="false"] .orbit-float,
+  .hero-stage[data-active="false"] .core-bob {
+    animation-play-state: paused;
+  }
+
   /* Analyze section stage — same rationale as the hero: CSS keyframes
      instead of a permanently-mounted GSAP context. */
   @keyframes panel-bob {
