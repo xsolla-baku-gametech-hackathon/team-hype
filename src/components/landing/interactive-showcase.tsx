@@ -386,7 +386,7 @@ export function InteractiveShowcase() {
               <span
                 aria-hidden="true"
                 className={cn(
-                  "rounded-full transition-all duration-500",
+                  "rounded-full transition-[width,height,background-color] duration-500",
                   index === activeIndex
                     ? "h-1.5 w-8 bg-accent"
                     : "size-1.5 bg-white/20 group-hover:bg-white/35",
