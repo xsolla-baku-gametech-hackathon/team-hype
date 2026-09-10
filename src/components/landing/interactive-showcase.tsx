@@ -37,6 +37,7 @@ export function InteractiveShowcase() {
   const [pinned, setPinned] = useState(false);
 
   const sectionRef = useRef<HTMLDivElement>(null);
+  const pinWrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
@@ -120,9 +121,10 @@ export function InteractiveShowcase() {
   useEffect(() => {
     if (reduce) return;
     const section = sectionRef.current;
+    const pinWrap = pinWrapRef.current;
     const stage = stageRef.current;
     const track = trackRef.current;
-    if (!section || !stage || !track) return;
+    if (!section || !pinWrap || !stage || !track) return;
 
     let cancelled = false;
     let mm: ReturnType<typeof gsap.matchMedia> | undefined;
@@ -143,13 +145,17 @@ export function InteractiveShowcase() {
       mm = gsap.matchMedia();
 
       mm.add("(min-width: 1024px)", () => {
-        if (!track || !stage) return;
+        if (!track || !stage || !pinWrap) return;
         setPinned(true);
         pinnedRef.current = true;
 
         const distance = () =>
           Math.max(0, track.scrollWidth - stage.clientWidth);
 
+        // Pin the heading + cards *together* (not just the card stage)
+        // so the cards never drift away from directly under the
+        // heading — the whole block holds its layout while only the
+        // track slides horizontally underneath.
         const tween = gsap.to(track, {
           x: () => -distance(),
           ease: "none",
@@ -158,7 +164,7 @@ export function InteractiveShowcase() {
             start: "top top",
             end: () => `+=${distance()}`,
             scrub: 1,
-            pin: stage,
+            pin: pinWrap,
             pinSpacing: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -227,98 +233,98 @@ export function InteractiveShowcase() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,oklch(0.5_0.08_185_/_0.12),transparent_60%)]"
       />
 
-      <Container className="lg:pt-24">
-        <Reveal className="mb-10 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="font-display text-4xl leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl">
-              Pipeline
-            </h2>
-            <p className="mt-4 max-w-[42ch] text-base text-pretty text-white/45 sm:text-lg">
-              From concept brief to evidence-backed decisions. Five stages that stay
-              traceable to real Steam player voice.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="relative hidden min-h-[2.5rem] min-w-[12rem] max-w-xs items-center justify-end md:flex">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.p
-                  key={activeSlide.id}
-                  initial={reduce ? false : { opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-x-0 top-0 text-right text-sm leading-snug text-pretty text-white/40"
-                >
-                  <span className="font-mono text-accent/80">{activeSlide.step}</span>
-                  <span className="mx-2 text-white/20">/</span>
-                  {activeSlide.title}
-                </motion.p>
-              </AnimatePresence>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <button
-                type="button"
-                onClick={() => goTo(activeIndex - 1)}
-                className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
-                aria-label="Previous slide"
-              >
-                <ChevronLeft className="size-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => goTo(activeIndex + 1)}
-                className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
-                aria-label="Next slide"
-              >
-                <ChevronRight className="size-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </Container>
-
       {/*
-       * IMPORTANT: this wrapper must NOT have a fixed height (no
-       * `h-screen`/flex-center). GSAP's pin needs to insert a spacer
-       * taller than the stage (stage height + horizontal-scroll
-       * distance) *inside* this element to push later sections down by
-       * exactly that much. A fixed-height wrapper caps that growth,
-       * which is what caused cards to render mid-page and overlap the
-       * next section — the bug this fix addresses.
+       * Heading + card stage live in one pinned block (`pinWrapRef`) so
+       * the cards never separate from the heading while scrubbing —
+       * only the track slides horizontally inside it. `section` itself
+       * has no fixed height, so GSAP's pin-spacer can grow it by
+       * exactly the horizontal-scroll distance without overlapping the
+       * next section.
        */}
-      <div className="relative">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16"
-        />
+      <div ref={pinWrapRef} className="relative">
+        <Container className="pt-2 lg:pt-16">
+          <Reveal className="mb-10 flex flex-col gap-4 sm:mb-14 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-4xl leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-white sm:text-5xl lg:text-6xl">
+                Pipeline
+              </h2>
+              <p className="mt-4 max-w-[42ch] text-base text-pretty text-white/45 sm:text-lg">
+                From concept brief to evidence-backed decisions. Five stages that
+                stay traceable to real Steam player voice.
+              </p>
+            </div>
 
-        {/* Stage: scrolls natively on mobile; becomes the pinned,
-            clipped viewport on lg+ while `track` is transformed. Its
-            own height stays content-driven (card height), so GSAP pins
-            exactly that box — no artificial full-screen height to
-            reconcile. */}
-        <div
-          ref={stageRef}
-          className="scrollbar-none w-full overflow-x-auto lg:flex lg:min-h-[calc(100dvh-5.5rem)] lg:items-center lg:overflow-hidden"
-        >
-          <div
-            ref={trackRef}
-            className="flex snap-x snap-mandatory gap-4 px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5 lg:snap-none lg:py-8 lg:will-change-transform"
-          >
-            {SHOWCASE_SLIDES.map((slide, index) => (
-              <div key={slide.id} data-slide-index={index} className="snap-center">
-                <ShowcaseSlide
-                  slide={slide}
-                  isActive={index === activeIndex}
-                  onSelect={() => goTo(index)}
-                />
+            <div className="flex items-center gap-3">
+              <div className="relative hidden min-h-[2.5rem] min-w-[12rem] max-w-xs items-center justify-end md:flex">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.p
+                    key={activeSlide.id}
+                    initial={reduce ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduce ? undefined : { opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-x-0 top-0 text-right text-sm leading-snug text-pretty text-white/40"
+                  >
+                    <span className="font-mono text-accent/80">{activeSlide.step}</span>
+                    <span className="mx-2 text-white/20">/</span>
+                    {activeSlide.title}
+                  </motion.p>
+                </AnimatePresence>
               </div>
-            ))}
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => goTo(activeIndex - 1)}
+                  className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="size-4" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goTo(activeIndex + 1)}
+                  className="flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </Reveal>
+        </Container>
+
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16"
+          />
+
+          {/* Stage: scrolls natively on mobile; becomes the clipped
+              viewport on lg+ while `track` is transformed. Height stays
+              content-driven (card height) — no full-screen centering,
+              so cards sit right under the heading, not floating lower. */}
+          <div
+            ref={stageRef}
+            className="scrollbar-none w-full overflow-x-auto lg:overflow-hidden"
+          >
+            <div
+              ref={trackRef}
+              className="flex snap-x snap-mandatory gap-4 px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5 lg:snap-none lg:will-change-transform"
+            >
+              {SHOWCASE_SLIDES.map((slide, index) => (
+                <div key={slide.id} data-slide-index={index} className="snap-center">
+                  <ShowcaseSlide
+                    slide={slide}
+                    isActive={index === activeIndex}
+                    onSelect={() => goTo(index)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
