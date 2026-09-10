@@ -17,7 +17,7 @@ import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { Magnetic } from "@/components/shared/magnetic";
 import { Button } from "@/components/ui/button";
-import { PRIMARY_NAV } from "@/lib/site-config";
+import { PRIMARY_NAV, APP_NAME } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -152,7 +152,7 @@ export function SiteHeader() {
           <div className="relative z-10 flex min-w-0 items-center">
             <Link
               href="/"
-              aria-label="GameLens home"
+              aria-label={`${APP_NAME} home`}
               className="group inline-flex min-w-0 items-center"
             >
               <Logo className="transition-[letter-spacing,opacity] duration-500 group-hover:tracking-[-0.02em] group-hover:opacity-90" />
