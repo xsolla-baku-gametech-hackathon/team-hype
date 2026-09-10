@@ -50,7 +50,7 @@ export function CompetitorCard({ game }: CompetitorCardProps) {
           ))}
         </div>
 
-        <div className="mt-auto flex items-center justify-between border-t border-border pt-3">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
           <span className="text-xs text-muted-foreground">
             Released {game.releaseYear}
           </span>
