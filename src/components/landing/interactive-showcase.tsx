@@ -35,15 +35,23 @@ export function InteractiveShowcase() {
     return () => window.clearInterval(timer);
   }, [paused, reduce]);
 
+  // Horizontal-only centering inside the track. Never use scrollIntoView —
+  // even with block: "nearest" it scrolls the document when the carousel
+  // is below the fold (mount + auto-advance were jumping the homepage).
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    const active = track.querySelector<HTMLElement>(`[data-slide-index="${activeIndex}"]`);
+    const active = track.querySelector<HTMLElement>(
+      `[data-slide-index="${activeIndex}"]`,
+    );
     if (!active) return;
-    active.scrollIntoView({
+
+    const targetLeft =
+      active.offsetLeft - (track.clientWidth - active.offsetWidth) / 2;
+
+    track.scrollTo({
+      left: Math.max(0, targetLeft),
       behavior: reduce ? "auto" : "smooth",
-      inline: "center",
-      block: "nearest",
     });
   }, [activeIndex, reduce]);
 
