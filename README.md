@@ -57,9 +57,11 @@ a live pitch can't depend on a third-party API staying up.
 Other useful scripts:
 
 ```bash
-npm run lint    # ESLint (next/core-web-vitals + TypeScript)
-npm test        # Vitest
-npm run build   # Production build + type-check
+npm run lint       # ESLint (next/core-web-vitals + TypeScript)
+npm run typecheck  # `tsc --noEmit`
+npm test           # Vitest
+npm run check      # lint + typecheck + test
+npm run build      # Production build + type-check
 ```
 
 ## Steam integration
