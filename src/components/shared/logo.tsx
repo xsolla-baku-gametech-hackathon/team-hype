@@ -3,18 +3,12 @@ import { cn } from "@/lib/utils/cn";
 
 interface LogoProps {
   className?: string;
-  /** Keep prop for call sites; wordmark-only — no icon mark. */
-  markOnly?: boolean;
 }
 
 /**
  * GameTech wordmark — display type only, no icon glyph.
  */
-export function Logo({ className, markOnly = false }: LogoProps) {
-  if (markOnly) {
-    return <span className="sr-only">{APP_NAME}</span>;
-  }
-
+export function Logo({ className }: LogoProps) {
   return (
     <span
       className={cn(
