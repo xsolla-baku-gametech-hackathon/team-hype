@@ -45,6 +45,16 @@ export function deriveMarketLandscape(
   games: readonly ComparableGame[],
   referenceYear: number = new Date().getFullYear(),
 ): MarketLandscape {
+  if (games.length === 0) {
+    return {
+      density: "low",
+      averagePositiveRatio: 0,
+      comparableTitles: 0,
+      medianReviewCount: 0,
+      recentReleaseRatio: "0 / 0",
+    };
+  }
+
   const reviewCounts = games.map((game) => game.totalReviews);
   const medianReviewCount = Math.round(median(reviewCounts));
   const recentCount = games.filter(

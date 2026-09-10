@@ -113,3 +113,13 @@ describe("getEvidenceForTheme", () => {
     expect(getEvidenceForTheme(evidence, "nonexistent")).toEqual([]);
   });
 });
+
+describe("deriveMarketLandscape empty input", () => {
+  it("returns a zeroed landscape instead of NaN ratios", () => {
+    const landscape = deriveMarketLandscape([]);
+    expect(landscape.comparableTitles).toBe(0);
+    expect(landscape.medianReviewCount).toBe(0);
+    expect(landscape.averagePositiveRatio).toBe(0);
+    expect(landscape.recentReleaseRatio).toBe("0 / 0");
+  });
+});
