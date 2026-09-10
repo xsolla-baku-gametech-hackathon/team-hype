@@ -2,7 +2,7 @@
 
 import { useId, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
+import { ChevronDown, Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -225,40 +225,33 @@ export function ConceptForm() {
                   </div>
                 </fieldset>
 
-                <fieldset className="mt-6">
-                  <legend
-                    id={genreGroupId}
-                    className="mb-2.5 text-[13px] font-medium text-white/70"
-                  >
+                <div className="mt-6">
+                  <Label htmlFor={genreGroupId} className="text-[13px] text-white/70">
                     Genre
-                  </legend>
-                  <div
-                    role="radiogroup"
-                    aria-labelledby={genreGroupId}
-                    className="flex flex-wrap gap-2"
-                  >
-                    {GENRE_FILTERS.map((option) => {
-                      const selected = genre === option.value;
-                      return (
-                        <button
+                  </Label>
+                  <div className="relative mt-2.5">
+                    <select
+                      id={genreGroupId}
+                      value={genre}
+                      onChange={(event) => setGenre(event.target.value)}
+                      className="w-full appearance-none rounded-lg border border-white/[0.08] bg-black/20 px-3.5 py-2.5 pr-9 text-sm text-white/85 backdrop-blur-sm transition-colors duration-300 outline-none focus-visible:border-accent/55 focus-visible:shadow-[0_0_0_3px_oklch(0.78_0.13_185_/_0.18)]"
+                    >
+                      {GENRE_FILTERS.map((option) => (
+                        <option
                           key={option.label}
-                          type="button"
-                          role="radio"
-                          aria-checked={selected}
-                          onClick={() => setGenre(option.value)}
-                          className={cn(
-                            "rounded-md border px-3 py-1.5 text-sm transition-[background-color,border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98]",
-                            selected
-                              ? "border-accent/40 bg-accent/15 text-accent"
-                              : "border-white/[0.08] bg-white/[0.03] text-white/55 hover:border-white/16 hover:text-white",
-                          )}
+                          value={option.value}
+                          className="bg-[#0c1118] text-white"
                         >
                           {option.label}
-                        </button>
-                      );
-                    })}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-white/45"
+                      aria-hidden="true"
+                    />
                   </div>
-                </fieldset>
+                </div>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p
