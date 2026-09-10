@@ -193,6 +193,3 @@ export const HERO_ORBIT_NODES = [
     showOnMobile: false,
   },
 ] as const;
-
-/** @deprecated Prefer HERO_ORBIT_NODES */
-export const HERO_SUPPORT_FRAGMENTS = HERO_ORBIT_NODES;
