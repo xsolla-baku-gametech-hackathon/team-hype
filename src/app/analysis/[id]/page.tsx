@@ -15,7 +15,18 @@ export async function generateMetadata({
   const { id } = await params;
   const report = getAnalysisReport(id);
 
-  return { title: report ? "Analysis Report" : "Analysis Not Found" };
+  if (!report) {
+    return {
+      title: "Analysis Not Found",
+      description:
+        "This GameLens analysis report could not be found. Start a new concept analysis from the homepage.",
+    };
+  }
+
+  return {
+    title: "Analysis Report",
+    description: `Evidence-backed market intelligence for “${report.concept}” — comparable Steam titles, player themes, and ranked opportunities.`,
+  };
 }
 
 export default async function AnalysisPage({ params }: AnalysisPageProps) {
