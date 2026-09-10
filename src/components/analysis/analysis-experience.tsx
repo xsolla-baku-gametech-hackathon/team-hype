@@ -74,6 +74,8 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
+    if (reduce) return;
+
     const timeouts: ReturnType<typeof setTimeout>[] = [];
     const totalDurationMs = ANALYSIS_STAGES.reduce(
       (sum, stage) => sum + stage.durationMs,
@@ -107,7 +109,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
       timeouts.forEach(clearTimeout);
       timeoutsRef.current = [];
     };
-  }, [report.comparableGames.length]);
+  }, [reduce, report.comparableGames.length]);
 
   function skipToReport() {
     timeoutsRef.current.forEach(clearTimeout);
@@ -117,7 +119,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
     setIsReportReady(true);
   }
 
-  if (isReportReady) {
+  if (reduce || isReportReady) {
     const { positive, complaint } = groupThemesBySentiment(report.themes);
 
     return (
