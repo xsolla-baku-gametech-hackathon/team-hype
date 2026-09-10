@@ -21,10 +21,48 @@ import { OpportunityList } from "@/components/opportunities/opportunity-list";
 import { ANALYSIS_STAGES } from "@/lib/analysis/constants";
 import { groupThemesBySentiment } from "@/lib/analysis/scoring";
 import type { AnalysisReport } from "@/lib/analysis/types";
-import { VISUAL_ASSETS } from "@/lib/visual-assets";
 
 interface AnalysisExperienceProps {
   report: AnalysisReport;
+}
+
+/**
+ * Plain concentric ring loader — no icon in the center. Outer ring
+ * rotates one way, inner ring the other, with a soft accent pulse.
+ * Purely decorative; sits above the headline, not overlapping it.
+ */
+function ScanRing() {
+  const reduce = useReducedMotion();
+
+  return (
+    <div
+      aria-hidden="true"
+      className="relative mb-2 flex size-24 items-center justify-center sm:size-28"
+    >
+      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,oklch(0.72_0.12_185_/_0.28),transparent_72%)] blur-xl" />
+
+      <motion.div
+        className="absolute inset-0 rounded-full border-2 border-accent/25"
+        style={{ borderTopColor: "var(--accent)" }}
+        animate={reduce ? undefined : { rotate: 360 }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute inset-3 rounded-full border border-dashed border-white/20"
+        animate={reduce ? undefined : { rotate: -360 }}
+        transition={{ duration: 5.5, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute inset-[38%] rounded-full bg-accent/70"
+        animate={
+          reduce
+            ? undefined
+            : { opacity: [0.5, 1, 0.5], scale: [0.9, 1.08, 0.9] }
+        }
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
 }
 
 export function AnalysisExperience({ report }: AnalysisExperienceProps) {
@@ -152,15 +190,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_50%_40%_at_50%_30%,oklch(0.55_0.1_185_/_0.14),transparent_65%)]"
       />
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={VISUAL_ASSETS.reportCommand.path}
-        alt=""
-        className="pointer-events-none absolute top-16 size-40 opacity-40"
-        onError={(event) => {
-          event.currentTarget.style.display = "none";
-        }}
-      />
+      <ScanRing />
 
       <div className="flex flex-col items-center gap-3">
         <Badge variant="accent">Analyzing your concept</Badge>
