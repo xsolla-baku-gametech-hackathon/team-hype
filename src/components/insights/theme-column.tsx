@@ -26,13 +26,20 @@ export function ThemeColumn({ title, sentiment, themes }: ThemeColumnProps) {
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
 
-      <ul className="flex list-none flex-col gap-3 p-0">
-        {themes.map((theme) => (
-          <li key={theme.id}>
-            <ThemeCard theme={theme} />
-          </li>
-        ))}
-      </ul>
+      {themes.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          No {sentiment === "positive" ? "positive" : "complaint"} themes
+          detected yet.
+        </p>
+      ) : (
+        <ul className="flex list-none flex-col gap-3 p-0">
+          {themes.map((theme) => (
+            <li key={theme.id}>
+              <ThemeCard theme={theme} />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
