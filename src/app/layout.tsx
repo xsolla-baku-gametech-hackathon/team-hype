@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Outfit, Syne } from "next/font/google";
 
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -26,6 +26,11 @@ const fontMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
 });
+
+export const viewport: Viewport = {
+  themeColor: "#08090c",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
