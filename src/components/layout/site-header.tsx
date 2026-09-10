@@ -32,6 +32,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { scrollY } = useScroll();
 
   // Close the mobile menu when the route changes (render-time sync —
@@ -55,6 +56,7 @@ export function SiteHeader() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setOpen(false);
+        menuButtonRef.current?.focus();
       }
     }
 
@@ -194,6 +196,7 @@ export function SiteHeader() {
             </Magnetic>
 
             <button
+              ref={menuButtonRef}
               type="button"
               className="inline-flex size-9 items-center justify-center rounded-xl border border-white/10 text-white/70 transition-colors hover:border-accent/30 hover:bg-white/[0.04] hover:text-white md:hidden"
               aria-expanded={open}
