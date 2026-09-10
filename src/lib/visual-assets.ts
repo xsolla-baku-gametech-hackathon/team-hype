@@ -140,19 +140,6 @@ export const VISUAL_ASSETS = {
     mobileFallback: "Omit",
     path: "/images/support-holo-panel-transparent.png",
   },
-  reportCommand: {
-    id: "report-command",
-    purpose: "Analysis progress centerpiece (reuses energy module).",
-    prompt: "Same family as supportEnergyModule",
-    aspectRatio: "1:1",
-    resolution: "2048x2048",
-    transparent: true,
-    placement: "Analysis progress state",
-    crop: "Centered",
-    animation: "Slow rotation",
-    mobileFallback: "Static reduced size",
-    path: "/images/support-energy-module-transparent.png",
-  },
 } as const satisfies Record<string, VisualAssetSpec>;
 
 /** Wide-stage orbital fragment placement (percentages of the stage). */
