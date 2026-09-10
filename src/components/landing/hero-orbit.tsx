@@ -70,6 +70,9 @@ export function HeroOrbit({ className }: { className?: string }) {
         <img
           src={VISUAL_ASSETS.heroAtmosphere.path}
           alt=""
+          width={1600}
+          height={900}
+          decoding="async"
           className="hero-atmosphere absolute inset-0 size-full scale-[1.6] object-cover opacity-35 blur-[6px] [mask-image:radial-gradient(ellipse_55%_50%_at_58%_48%,#000_0%,transparent_60%)]"
         />
         <div className="hero-glow-pulse absolute top-[24%] left-[48%] h-[55%] w-[55%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.55_0.16_280_/_0.4),oklch(0.55_0.12_230_/_0.14)_42%,transparent_70%)] blur-3xl" />
@@ -125,6 +128,8 @@ export function HeroOrbit({ className }: { className?: string }) {
               alt=""
               fetchPriority="high"
               decoding="async"
+              width={1024}
+              height={1024}
               className="relative z-10 size-full scale-[1.12] object-contain drop-shadow-[0_0_80px_oklch(0.55_0.16_280_/_0.55)] sm:scale-[1.18]"
               onError={(event) => {
                 event.currentTarget.src = VISUAL_ASSETS.heroCoreAlt.path;
@@ -176,6 +181,10 @@ function OrbitNode({
         <img
           src={src}
           alt=""
+          loading="lazy"
+          decoding="async"
+          width={512}
+          height={512}
           className="size-full object-contain drop-shadow-[0_12px_40px_rgba(0,0,0,0.55)]"
         />
       </div>
