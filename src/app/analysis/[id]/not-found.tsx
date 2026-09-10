@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function AnalysisNotFound() {
   return (
-    <Container className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+      <Container className="flex min-h-[60dvh] flex-col items-center justify-center gap-4 text-center">
       <SearchX className="size-10 text-muted-foreground" aria-hidden="true" />
       <h1 className="text-xl font-semibold text-foreground">
         We couldn&apos;t find that analysis
