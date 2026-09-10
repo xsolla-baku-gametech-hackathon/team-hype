@@ -123,6 +123,8 @@ export function HeroOrbit({ className }: { className?: string }) {
             <img
               src={VISUAL_ASSETS.heroOrbit.path}
               alt=""
+              fetchPriority="high"
+              decoding="async"
               className="relative z-10 size-full scale-[1.12] object-contain drop-shadow-[0_0_80px_oklch(0.55_0.16_280_/_0.55)] sm:scale-[1.18]"
               onError={(event) => {
                 event.currentTarget.src = VISUAL_ASSETS.heroCoreAlt.path;
