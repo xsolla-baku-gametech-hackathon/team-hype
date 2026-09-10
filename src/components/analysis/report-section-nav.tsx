@@ -25,7 +25,7 @@ export function ReportSectionNav() {
   useEffect(() => {
     const sections = SECTION_LINKS.map((link) =>
       document.getElementById(link.id),
-    ).filter(Boolean) as HTMLElement[];
+    ).filter((el): el is HTMLElement => el instanceof HTMLElement);
 
     if (sections.length === 0) return;
 
