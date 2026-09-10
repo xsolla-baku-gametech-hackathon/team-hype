@@ -111,17 +111,26 @@ export function ConceptForm() {
   return (
     <section
       id="analyze-section"
-      className="relative isolate min-h-[100dvh] overflow-hidden py-20 sm:py-24 lg:py-28"
+      className="relative isolate min-h-[100dvh] overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28"
     >
       <AnalyzeStage />
 
       <Container className="relative z-20">
         <Reveal className="mb-10 max-w-2xl sm:mb-12">
-          <div className="inline-flex items-center gap-2 rounded-md border border-accent/25 bg-accent/10 px-2.5 py-1 text-[11px] font-medium tracking-wide text-accent backdrop-blur-md">
-            <ScanSearch className="size-3.5" aria-hidden="true" />
-            Market analysis console
+          {/* Section index — editorial strip, not a second header pill */}
+          <div className="mb-5 flex items-center gap-3">
+            <span className="font-mono text-[11px] tracking-[0.22em] text-white/35 uppercase">
+              04
+            </span>
+            <span
+              aria-hidden="true"
+              className="h-px w-8 bg-gradient-to-r from-accent/70 to-transparent"
+            />
+            <span className="font-mono text-[11px] tracking-[0.18em] text-white/45 uppercase">
+              Market console
+            </span>
           </div>
-          <h2 className="font-display mt-4 text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
             Analyze your concept
           </h2>
           <p className="mt-3 max-w-[48ch] text-base text-pretty text-white/50">

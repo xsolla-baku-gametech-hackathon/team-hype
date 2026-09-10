@@ -90,25 +90,14 @@ export function SiteHeader() {
             className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent"
           />
 
-          <div className="relative z-10 flex min-w-0 items-center gap-3">
+          <div className="relative z-10 flex min-w-0 items-center">
             <Link
               href="/"
               aria-label="GameLens home"
               className="group inline-flex min-w-0 items-center"
             >
-              <Logo className="transition-transform duration-500 group-hover:scale-[1.02]" />
+              <Logo className="transition-[letter-spacing,opacity] duration-500 group-hover:tracking-[-0.02em] group-hover:opacity-90" />
             </Link>
-
-            <span
-              aria-hidden="true"
-              className="hidden items-center gap-1.5 rounded-full border border-accent/20 bg-accent/8 px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] text-accent uppercase sm:inline-flex"
-            >
-              <span className="relative flex size-1.5">
-                <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-60" />
-                <span className="relative size-1.5 rounded-full bg-accent" />
-              </span>
-              Live
-            </span>
           </div>
 
           <nav
