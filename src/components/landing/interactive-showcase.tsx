@@ -124,51 +124,85 @@ export function InteractiveShowcase() {
     const track = trackRef.current;
     if (!section || !stage || !track) return;
 
-    const mm = gsap.matchMedia();
+    let cancelled = false;
+    let mm: ReturnType<typeof gsap.matchMedia> | undefined;
 
-    mm.add("(min-width: 1024px)", () => {
-      setPinned(true);
-      pinnedRef.current = true;
+    async function setup() {
+      // Wait for fonts before measuring scrollWidth/clientHeight — a
+      // font swap after mount reflows card text and was throwing the
+      // pin distance/height math off (part of the reported bug).
+      if (typeof document !== "undefined" && "fonts" in document) {
+        try {
+          await document.fonts.ready;
+        } catch {
+          // ignore
+        }
+      }
+      if (cancelled) return;
 
-      const distance = () =>
-        Math.max(0, track.scrollWidth - stage.clientWidth);
+      mm = gsap.matchMedia();
 
-      const tween = gsap.to(track, {
-        x: () => -distance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${distance()}`,
-          scrub: 1,
-          pin: stage,
-          pinSpacing: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const index = Math.round(self.progress * LAST_INDEX);
-            setActiveIndex((current) => (current === index ? current : index));
+      mm.add("(min-width: 1024px)", () => {
+        if (!track || !stage) return;
+        setPinned(true);
+        pinnedRef.current = true;
+
+        const distance = () =>
+          Math.max(0, track.scrollWidth - stage.clientWidth);
+
+        const tween = gsap.to(track, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${distance()}`,
+            scrub: 1,
+            pin: stage,
+            pinSpacing: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const index = Math.round(self.progress * LAST_INDEX);
+              setActiveIndex((current) =>
+                current === index ? current : index,
+              );
+            },
           },
-        },
+        });
+
+        scrollTriggerRef.current = tween.scrollTrigger ?? null;
+        ScrollTrigger.refresh();
+
+        return () => {
+          scrollTriggerRef.current = null;
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          gsap.set(track, { clearProps: "x" });
+        };
       });
 
-      scrollTriggerRef.current = tween.scrollTrigger ?? null;
+      mm.add("(max-width: 1023px)", () => {
+        setPinned(false);
+        pinnedRef.current = false;
+        return () => {};
+      });
+    }
 
-      return () => {
-        scrollTriggerRef.current = null;
-        tween.scrollTrigger?.kill();
-        tween.kill();
-        gsap.set(track, { clearProps: "x" });
-      };
-    });
+    void setup();
 
-    mm.add("(max-width: 1023px)", () => {
-      setPinned(false);
-      pinnedRef.current = false;
-      return () => {};
-    });
+    function onResize() {
+      ScrollTrigger.refresh();
+    }
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
 
-    return () => mm.revert();
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      mm?.revert();
+    };
   }, [reduce]);
 
   const activeSlide = SHOWCASE_SLIDES[activeIndex];
@@ -244,7 +278,16 @@ export function InteractiveShowcase() {
         </Reveal>
       </Container>
 
-      <div className="relative lg:flex lg:h-screen lg:items-center">
+      {/*
+       * IMPORTANT: this wrapper must NOT have a fixed height (no
+       * `h-screen`/flex-center). GSAP's pin needs to insert a spacer
+       * taller than the stage (stage height + horizontal-scroll
+       * distance) *inside* this element to push later sections down by
+       * exactly that much. A fixed-height wrapper caps that growth,
+       * which is what caused cards to render mid-page and overlap the
+       * next section — the bug this fix addresses.
+       */}
+      <div className="relative">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
@@ -255,14 +298,17 @@ export function InteractiveShowcase() {
         />
 
         {/* Stage: scrolls natively on mobile; becomes the pinned,
-            clipped viewport on lg+ while `track` is transformed. */}
+            clipped viewport on lg+ while `track` is transformed. Its
+            own height stays content-driven (card height), so GSAP pins
+            exactly that box — no artificial full-screen height to
+            reconcile. */}
         <div
           ref={stageRef}
-          className="scrollbar-none w-full overflow-x-auto lg:overflow-hidden"
+          className="scrollbar-none w-full overflow-x-auto lg:flex lg:min-h-[calc(100dvh-5.5rem)] lg:items-center lg:overflow-hidden"
         >
           <div
             ref={trackRef}
-            className="flex snap-x snap-mandatory gap-4 px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5 lg:snap-none lg:will-change-transform"
+            className="flex snap-x snap-mandatory gap-4 px-[max(1rem,calc(50%-170px))] py-4 sm:gap-5 lg:snap-none lg:py-8 lg:will-change-transform"
           >
             {SHOWCASE_SLIDES.map((slide, index) => (
               <div key={slide.id} data-slide-index={index} className="snap-center">
