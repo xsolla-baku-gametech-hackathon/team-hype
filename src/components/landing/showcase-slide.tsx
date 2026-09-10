@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 import type { ShowcaseSlideData } from "@/components/landing/showcase-data";
 import { cn } from "@/lib/utils/cn";
@@ -37,6 +37,7 @@ interface ShowcaseSlideProps {
 
 export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps) {
   const Icon = slide.icon;
+  const reduce = useReducedMotion();
 
   return (
     <motion.button
@@ -50,12 +51,20 @@ export function ShowcaseSlide({ slide, isActive, onSelect }: ShowcaseSlideProps)
           ? "border-accent/30 bg-[#0c1118]/95 shadow-[0_24px_80px_-28px_rgba(0,0,0,0.9),0_0_40px_-20px_var(--accent-glow)]"
           : "border-white/[0.07] bg-[#0a0e14]/70 opacity-55 hover:opacity-85",
       )}
-      animate={{
-        scale: isActive ? 1 : 0.92,
-        y: isActive ? 0 : 16,
-        rotateY: isActive ? 0 : -4,
-      }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      animate={
+        reduce
+          ? { scale: 1, y: 0, rotateY: 0 }
+          : {
+              scale: isActive ? 1 : 0.92,
+              y: isActive ? 0 : 16,
+              rotateY: isActive ? 0 : -4,
+            }
+      }
+      transition={
+        reduce
+          ? { duration: 0 }
+          : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }
+      }
       style={{ transformPerspective: 900 }}
     >
       <div
