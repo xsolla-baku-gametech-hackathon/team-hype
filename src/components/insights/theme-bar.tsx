@@ -10,7 +10,7 @@ interface ThemeBarProps {
 export function ThemeBar({ percentage, sentiment }: ThemeBarProps) {
   return (
     <div
-      role="progressbar"
+      role="meter"
       aria-label={`${percentage}% ${sentiment} theme coverage`}
       aria-valuenow={percentage}
       aria-valuemin={0}
