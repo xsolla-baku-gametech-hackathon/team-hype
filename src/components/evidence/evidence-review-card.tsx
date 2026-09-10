@@ -11,9 +11,9 @@ export function EvidenceReviewCard({ review }: EvidenceReviewCardProps) {
   return (
     <article className="rounded-lg border border-border bg-background/40 p-4 print:break-inside-avoid">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-foreground">
+        <h3 className="text-sm font-medium text-foreground">
           {review.gameName}
-        </span>
+        </h3>
         <Badge variant={review.sentiment === "positive" ? "positive" : "negative"}>
           {review.sentiment === "positive" ? "Positive" : "Negative"}
         </Badge>
@@ -23,9 +23,9 @@ export function EvidenceReviewCard({ review }: EvidenceReviewCardProps) {
         {review.playtimeHours}h playtime
       </p>
 
-      <p className="mt-3 text-sm leading-relaxed text-foreground">
-        &ldquo;{review.reviewText}&rdquo;
-      </p>
+      <blockquote className="mt-3 text-sm leading-relaxed text-foreground">
+        <p>{review.reviewText}</p>
+      </blockquote>
 
       <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
