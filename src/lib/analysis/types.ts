@@ -6,6 +6,9 @@ import { z } from "zod";
  * concept is user input, not analysis output.
  */
 
+export const MIN_CONCEPT_LENGTH = 30;
+export const MAX_CONCEPT_LENGTH = 2000;
+
 export const PLATFORMS = ["pc", "console", "mobile"] as const;
 export type Platform = (typeof PLATFORMS)[number];
 
@@ -38,8 +41,8 @@ export const conceptFormSchema = z.object({
   concept: z
     .string()
     .trim()
-    .min(30, "Add a bit more detail so we can find comparable games.")
-    .max(2000, "Keep the concept under 2000 characters."),
+    .min(MIN_CONCEPT_LENGTH, "Add a bit more detail so we can find comparable games.")
+    .max(MAX_CONCEPT_LENGTH, `Keep the concept under ${MAX_CONCEPT_LENGTH} characters.`),
   platform: z.enum(PLATFORMS).optional(),
   genre: z.enum(GENRES).optional(),
 });

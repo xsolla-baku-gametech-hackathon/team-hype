@@ -23,12 +23,13 @@ import {
   GENRE_OPTIONS,
   PLATFORM_OPTIONS,
 } from "@/lib/analysis/constants";
-import { conceptFormSchema } from "@/lib/analysis/types";
+import {
+  MAX_CONCEPT_LENGTH,
+  MIN_CONCEPT_LENGTH,
+  conceptFormSchema,
+} from "@/lib/analysis/types";
 import { VISUAL_ASSETS } from "@/lib/visual-assets";
 import { cn } from "@/lib/utils/cn";
-
-const MIN_CONCEPT_LENGTH = 30;
-const MAX_CONCEPT_LENGTH = 2000;
 
 const PLATFORM_FILTERS = [
   { value: "", label: "Any", icon: ScanSearch },
