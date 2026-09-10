@@ -6,7 +6,10 @@ import { AnalysisProgress } from "@/components/analysis/analysis-progress";
 import { CompetitorRevealList } from "@/components/analysis/competitor-reveal-list";
 import { MetricsRow } from "@/components/analysis/metrics-row";
 import { ReportHeader } from "@/components/analysis/report-header";
+import { ReportSection } from "@/components/analysis/report-section";
+import { ReportSectionNav } from "@/components/analysis/report-section-nav";
 import { Badge } from "@/components/ui/badge";
+import { CompetitorGrid } from "@/components/games/competitor-grid";
 import { ANALYSIS_STAGES } from "@/lib/analysis/constants";
 import type { AnalysisReport } from "@/lib/analysis/types";
 
@@ -64,9 +67,23 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
 
   if (isReportReady) {
     return (
-      <div className="flex flex-col gap-10 py-12">
-        <ReportHeader report={report} />
-        <MetricsRow summary={report.summary} />
+      <div className="flex flex-col gap-12 pb-20">
+        <ReportSectionNav />
+
+        <ReportSection id="overview" title="Overview">
+          <div className="flex flex-col gap-8 pt-4">
+            <ReportHeader report={report} />
+            <MetricsRow summary={report.summary} />
+          </div>
+        </ReportSection>
+
+        <ReportSection
+          id="competitors"
+          title="Comparable Games"
+          description="Steam titles closest to your concept, ranked by semantic similarity."
+        >
+          <CompetitorGrid games={report.comparableGames} />
+        </ReportSection>
       </div>
     );
   }
