@@ -28,10 +28,18 @@ export function SiteHeader() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [menuPathname, setMenuPathname] = useState(pathname);
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+
+  // Close the mobile menu when the route changes (render-time sync —
+  // avoids setState-in-effect cascading render warnings).
+  if (pathname !== menuPathname) {
+    setMenuPathname(pathname);
+    setOpen(false);
+  }
 
   const spotX = useMotionValue(0);
   const spotY = useMotionValue(0);
@@ -42,8 +50,17 @@ export function SiteHeader() {
   });
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    if (!open) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   function onDockMove(event: MouseEvent<HTMLDivElement>) {
     if (reduce || !dockRef.current) return;
