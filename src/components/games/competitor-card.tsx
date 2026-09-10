@@ -59,6 +59,7 @@ export function CompetitorCard({ game }: CompetitorCardProps) {
             className="inline-flex items-center gap-1 text-xs font-medium text-accent transition-colors hover:text-accent/80"
           >
             View Player Insights
+            <span className="sr-only"> for {game.name}</span>
             <ArrowUpRight className="size-3.5" aria-hidden="true" />
           </Link>
         </div>
