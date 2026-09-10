@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { useRef } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -21,6 +20,14 @@ import { cn } from "@/lib/utils/cn";
  * Full-viewport immersive hero stage: atmosphere + oversized core +
  * orbital process nodes. Core is deliberately large so the first
  * frame feels filled, not cropped short.
+ *
+ * All the decorative loops (rings, scan dot, flow beams, glow pulse,
+ * atmosphere drift, node float, core bob) run as CSS keyframe
+ * animations — see the `.hero-*` / `.orbit-float` / `.core-bob` rules
+ * in globals.css. That keeps this component's only continuous JS work
+ * to mouse-driven spring parallax (event-driven, near-zero cost when
+ * idle), instead of ~12 concurrent GSAP/Framer rAF tweens fighting for
+ * the same frame budget as scroll input at the top of the page.
  */
 export function HeroOrbit({ className }: { className?: string }) {
   const reduce = useReducedMotion();
@@ -30,67 +37,6 @@ export function HeroOrbit({ className }: { className?: string }) {
   const sx = useSpring(mx, { stiffness: 80, damping: 20 });
   const sy = useSpring(my, { stiffness: 80, damping: 20 });
   const coreTransform = useMotionTemplate`translate3d(${sx}px, ${sy}px, 0)`;
-
-  useEffect(() => {
-    if (reduce || !stageRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to(".hero-ring-a", {
-        rotate: 360,
-        duration: 48,
-        ease: "none",
-        repeat: -1,
-      });
-      gsap.to(".hero-ring-b", {
-        rotate: -360,
-        duration: 64,
-        ease: "none",
-        repeat: -1,
-      });
-      gsap.to(".hero-ring-c", {
-        rotate: 360,
-        duration: 36,
-        ease: "none",
-        repeat: -1,
-      });
-      gsap.to(".hero-scan", {
-        rotate: 360,
-        duration: 14,
-        ease: "none",
-        repeat: -1,
-      });
-      gsap.fromTo(
-        ".hero-flow-beam",
-        { xPercent: -30, opacity: 0.15 },
-        {
-          xPercent: 30,
-          opacity: 0.55,
-          duration: 4.8,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          stagger: 0.7,
-        },
-      );
-      gsap.to(".hero-glow-pulse", {
-        opacity: 0.55,
-        scale: 1.08,
-        duration: 3.2,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to(".hero-atmosphere", {
-        xPercent: 3,
-        duration: 18,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-    }, stageRef);
-
-    return () => ctx.revert();
-  }, [reduce]);
 
   function onMove(event: React.MouseEvent<HTMLDivElement>) {
     if (reduce || !stageRef.current) return;
@@ -172,11 +118,7 @@ export function HeroOrbit({ className }: { className?: string }) {
           className="relative aspect-square w-full will-change-transform"
           style={reduce ? undefined : { transform: coreTransform }}
         >
-          <motion.div
-            className="relative size-full"
-            animate={reduce ? undefined : { y: [0, -14, 0] }}
-            transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }}
-          >
+          <div className="core-bob relative size-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={VISUAL_ASSETS.heroOrbit.path}
@@ -187,7 +129,7 @@ export function HeroOrbit({ className }: { className?: string }) {
               }}
             />
             <div className="pointer-events-none absolute inset-[12%] -z-10 rounded-full bg-[radial-gradient(circle,oklch(0.65_0.14_250_/_0.4),transparent_70%)] blur-3xl" />
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 
@@ -224,13 +166,9 @@ function OrbitNode({
       )}
       style={reduce ? undefined : { x, y }}
     >
-      <motion.div
-        animate={reduce ? undefined : { y: [0, -10, 0], x: [0, 6, 0] }}
-        transition={{
-          duration: floatDuration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+      <div
+        className="orbit-float"
+        style={{ animationDuration: `${floatDuration}s` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -238,7 +176,7 @@ function OrbitNode({
           alt=""
           className="size-full object-contain drop-shadow-[0_12px_40px_rgba(0,0,0,0.55)]"
         />
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

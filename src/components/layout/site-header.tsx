@@ -69,10 +69,13 @@ export function SiteHeader() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            "pointer-events-auto relative flex h-[3.4rem] items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 transition-[background,box-shadow,border-color,backdrop-filter] duration-500 sm:h-14 sm:px-4",
+            "pointer-events-auto relative flex h-[3.4rem] items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 transition-[background,box-shadow,border-color] duration-500 sm:h-14 sm:px-4",
             scrolled
-              ? "border-white/12 bg-[#07090d]/88 shadow-[0_20px_60px_-28px_rgba(0,0,0,0.95),inset_0_1px_0_oklch(1_0_0_/_0.06)] backdrop-blur-2xl"
-              : "border-white/[0.08] bg-[#07090d]/35 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.05)] backdrop-blur-md",
+              // backdrop-blur only kicks in once scrolled — at the top of
+              // the page (hero, busiest frame) the header stays cheap
+              // (solid-ish tint, no live backdrop resampling every frame).
+              ? "border-white/12 bg-[#07090d]/92 shadow-[0_20px_60px_-28px_rgba(0,0,0,0.95),inset_0_1px_0_oklch(1_0_0_/_0.06)] backdrop-blur-2xl"
+              : "border-white/[0.08] bg-[#07090d]/55 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.05)]",
           )}
         >
           {/* Cursor spotlight wash */}

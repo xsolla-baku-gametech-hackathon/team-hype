@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import gsap from "gsap";
 import { Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
 import {
   AnimatePresence,
@@ -317,7 +316,14 @@ export function ConceptForm() {
   );
 }
 
-/** Full-bleed transparent holo stage with parallax + GSAP motion. */
+/**
+ * Full-bleed transparent holo stage. The float/glow/beam/watermark
+ * loops are CSS keyframes (`.analyze-*` in globals.css) so they run on
+ * the compositor thread instead of a permanently-mounted GSAP context —
+ * this section mounts on initial page load even off-screen, so it used
+ * to keep 4 rAF tweens running the whole time, competing with scroll.
+ * Only the mouse parallax stays JS-driven (event-based, cheap when idle).
+ */
 function AnalyzeStage() {
   const reduce = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
@@ -326,49 +332,6 @@ function AnalyzeStage() {
   const sx = useSpring(mx, { stiffness: 70, damping: 22 });
   const sy = useSpring(my, { stiffness: 70, damping: 22 });
   const panelTransform = useMotionTemplate`translate3d(${sx}px, ${sy}px, 0)`;
-
-  useEffect(() => {
-    if (reduce || !stageRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to(".analyze-panel", {
-        y: -18,
-        duration: 5.5,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to(".analyze-glow", {
-        opacity: 0.55,
-        scale: 1.08,
-        duration: 3.4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.fromTo(
-        ".analyze-beam",
-        { xPercent: -25, opacity: 0.12 },
-        {
-          xPercent: 25,
-          opacity: 0.4,
-          duration: 5.2,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        },
-      );
-      gsap.to(".analyze-watermark", {
-        opacity: 0.09,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-    }, stageRef);
-
-    return () => ctx.revert();
-  }, [reduce]);
 
   function onMove(event: React.MouseEvent<HTMLDivElement>) {
     if (reduce || !stageRef.current) return;
@@ -423,18 +386,14 @@ function AnalyzeStage() {
       </motion.div>
 
       {/* Secondary smaller shard for depth */}
-      <motion.div
-        className="absolute bottom-[12%] right-[38%] hidden w-[18%] opacity-50 lg:block"
-        animate={reduce ? undefined : { y: [0, -10, 0], rotate: [0, 3, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-      >
+      <div className="shard-float absolute bottom-[12%] right-[38%] hidden w-[18%] opacity-50 lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={VISUAL_ASSETS.supportHexShard.path}
           alt=""
           className="w-full object-contain"
         />
-      </motion.div>
+      </div>
 
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
       <div className="absolute inset-y-0 left-0 w-[28%] bg-gradient-to-r from-background via-background/60 to-transparent lg:w-[22%]" />
