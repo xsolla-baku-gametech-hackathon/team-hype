@@ -180,7 +180,10 @@ export function ConceptForm() {
                   rows={6}
                   placeholder={CONCEPT_PLACEHOLDER}
                   value={concept}
-                  onChange={(event) => setConcept(event.target.value)}
+                  onChange={(event) => {
+                    setConcept(event.target.value);
+                    if (error) setError(null);
+                  }}
                   minLength={MIN_CONCEPT_LENGTH}
                   maxLength={MAX_CONCEPT_LENGTH}
                   required
@@ -236,6 +239,7 @@ export function ConceptForm() {
                       }
 
                       setPlatform(PLATFORM_FILTERS[nextIndex].value);
+                      if (error) setError(null);
                       const radios =
                         event.currentTarget.querySelectorAll<HTMLElement>(
                           '[role="radio"]',
@@ -253,7 +257,10 @@ export function ConceptForm() {
                           role="radio"
                           aria-checked={selected}
                           tabIndex={selected ? 0 : -1}
-                          onClick={() => setPlatform(option.value)}
+                          onClick={() => {
+                            setPlatform(option.value);
+                            if (error) setError(null);
+                          }}
                           className={cn(
                             "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm transition-[background-color,color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:flex-none",
                             selected
@@ -279,7 +286,10 @@ export function ConceptForm() {
                       name="genre"
                       autoComplete="off"
                       value={genre}
-                      onChange={(event) => setGenre(event.target.value)}
+                      onChange={(event) => {
+                        setGenre(event.target.value);
+                        if (error) setError(null);
+                      }}
                       className="w-full appearance-none rounded-lg border border-white/[0.08] bg-black/20 px-3.5 py-2.5 pr-9 text-sm text-white/85 backdrop-blur-sm transition-colors duration-300 outline-none focus-visible:border-accent/55 focus-visible:shadow-[0_0_0_3px_oklch(0.78_0.13_185_/_0.18)]"
                     >
                       {GENRE_FILTERS.map((option) => (
