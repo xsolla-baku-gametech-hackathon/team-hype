@@ -32,15 +32,15 @@ export function MarketLandscapePanel({ landscape }: MarketLandscapePanelProps) {
   ];
 
   return (
-    <div className="flex flex-wrap gap-x-8 gap-y-4 rounded-lg border border-border bg-surface px-5 py-4">
+    <dl className="flex flex-wrap gap-x-8 gap-y-4 rounded-lg border border-border bg-surface px-5 py-4">
       {stats.map((stat) => (
         <div key={stat.label} className="flex flex-col gap-0.5">
-          <span className="text-xs text-muted-foreground">{stat.label}</span>
-          <span className="text-sm font-medium tabular-nums text-foreground">
+          <dt className="text-xs text-muted-foreground">{stat.label}</dt>
+          <dd className="text-sm font-medium tabular-nums text-foreground">
             {stat.value}
-          </span>
+          </dd>
         </div>
       ))}
-    </div>
+    </dl>
   );
 }
