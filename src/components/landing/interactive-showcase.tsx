@@ -11,6 +11,7 @@ import { SHOWCASE_SLIDES } from "@/components/landing/showcase-data";
 import { ShowcaseSlide } from "@/components/landing/showcase-slide";
 import { Reveal } from "@/components/shared/reveal";
 import { Container } from "@/components/layout/container";
+import { APP_NAME } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -217,7 +218,7 @@ export function InteractiveShowcase() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      aria-label="How GameLens works"
+      aria-label={`How ${APP_NAME} works`}
       className="relative scroll-mt-28 overflow-hidden py-24 sm:py-32 lg:py-0"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
