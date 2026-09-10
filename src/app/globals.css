@@ -10,18 +10,17 @@
  * defined once, directly in :root, instead of toggling a `.dark` class.
  */
 :root {
-  --background: oklch(0.14 0.004 264);
-  --surface: oklch(0.19 0.005 264);
-  --surface-hover: oklch(0.22 0.006 264);
+  --background: oklch(0.11 0.005 264);
+  --surface: oklch(0.17 0.006 264);
+  --surface-hover: oklch(0.21 0.007 264);
   --border: oklch(1 0 0 / 9%);
   --border-strong: oklch(1 0 0 / 16%);
 
   --foreground: oklch(0.97 0.002 264);
   --muted-foreground: oklch(0.64 0.01 264);
 
-  /* Primary product accent — the only strong hue used for interactive
-   * emphasis (CTAs, active states, links, similarity scores). */
-  --accent: oklch(0.64 0.19 275);
+  /* Primary product accent — cool violet for CTAs, active states, links. */
+  --accent: oklch(0.66 0.17 275);
   --accent-foreground: oklch(0.99 0 0);
 
   /* Semantic signal colors, used sparingly for review sentiment and

@@ -19,7 +19,7 @@ export function Logo({ className }: LogoProps) {
         className,
       )}
     >
-      <span className="flex size-7 items-center justify-center rounded-md bg-accent/15 text-accent">
+      <span className="flex size-7 items-center justify-center rounded-lg border border-accent/25 bg-accent/15 text-accent shadow-[0_0_20px_-6px_oklch(0.66_0.17_275_/_0.55)]">
         <ScanSearch className="size-4" aria-hidden="true" />
       </span>
       {APP_NAME}

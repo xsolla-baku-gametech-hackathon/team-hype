@@ -67,10 +67,10 @@ export function ConceptForm() {
     >
       <div
         aria-hidden="true"
-        className="absolute -inset-x-6 -inset-y-6 -z-10 rounded-[2rem] bg-accent/10 blur-2xl"
+        className="absolute -inset-x-8 -inset-y-8 -z-10 rounded-[2rem] bg-accent/12 blur-3xl"
       />
 
-      <div className="rounded-xl border border-border bg-surface/80 p-5 shadow-2xl shadow-black/20 backdrop-blur">
+      <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c12]/90 p-5 shadow-[0_28px_80px_-36px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:p-6">
         <Label htmlFor={conceptFieldId}>Describe your game concept</Label>
         <Textarea
           id={conceptFieldId}
