@@ -17,6 +17,7 @@ export function formatPercentage(ratio: number): string {
 }
 
 /** `"moderate"` → `"Moderate"`. For single-word enum-style labels only. */
-export function capitalize(value: string): string {
-  return value.length === 0 ? value : `${value[0].toUpperCase()}${value.slice(1)}`;
+export function capitalize<T extends string>(value: T): Capitalize<T> {
+  if (value.length === 0) return value as Capitalize<T>;
+  return `${value[0].toUpperCase()}${value.slice(1)}` as Capitalize<T>;
 }
