@@ -117,16 +117,21 @@ export function HeroOrbit({ className }: { className?: string }) {
       onMouseLeave={onLeave}
       aria-hidden="true"
     >
-      {/* Wide atmospheric plate — full frame depth */}
-      <div className="pointer-events-none absolute inset-[-4%_-10%] overflow-hidden">
+      {/* Wide atmospheric plate — oversized + heavily feathered so its
+          own photo edges never surface inside the viewport. */}
+      <div className="pointer-events-none absolute -inset-[35%] overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={VISUAL_ASSETS.heroAtmosphere.path}
           alt=""
-          className="hero-atmosphere absolute inset-0 size-full scale-[1.2] object-cover opacity-45 blur-[1.5px] [mask-image:radial-gradient(ellipse_78%_72%_at_58%_48%,#000_25%,transparent_82%)]"
+          className="hero-atmosphere absolute inset-0 size-full scale-[1.6] object-cover opacity-35 blur-[6px] [mask-image:radial-gradient(ellipse_55%_50%_at_58%_48%,#000_0%,transparent_60%)]"
         />
-        <div className="hero-glow-pulse absolute top-[12%] left-[48%] h-[70%] w-[70%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.55_0.16_280_/_0.4),oklch(0.55_0.12_230_/_0.14)_42%,transparent_70%)] blur-3xl" />
+        <div className="hero-glow-pulse absolute top-[24%] left-[48%] h-[55%] w-[55%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.55_0.16_280_/_0.4),oklch(0.55_0.12_230_/_0.14)_42%,transparent_70%)] blur-3xl" />
       </div>
+
+      {/* Base fill so the atmosphere plate always sits on a matching
+          solid backdrop — removes any hard rectangle at its bounds. */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[#08090c]" />
 
       {/* Horizontal process-flow beams */}
       <div className="pointer-events-none absolute inset-x-0 top-[48%] hidden h-px sm:block">
@@ -186,7 +191,7 @@ export function HeroOrbit({ className }: { className?: string }) {
         </motion.div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_75%_at_55%_48%,transparent_35%,var(--background)_94%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_85%_at_55%_48%,transparent_30%,var(--background)_88%)]" />
     </div>
   );
 }
