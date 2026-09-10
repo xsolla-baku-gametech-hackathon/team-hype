@@ -5,6 +5,7 @@ import {
   STEAM_REVIEW_LANGUAGES,
   STEAM_REVIEW_TYPES,
   type SteamPurchaseType,
+  type SteamReviewLanguage,
   type SteamReviewType,
 } from "@/lib/steam/constants";
 
