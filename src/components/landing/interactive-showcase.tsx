@@ -343,13 +343,18 @@ export function InteractiveShowcase() {
               aria-selected={index === activeIndex}
               aria-label={`Show ${slide.title}`}
               onClick={() => goTo(index)}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-500",
-                index === activeIndex
-                  ? "w-8 bg-accent"
-                  : "w-1.5 bg-white/20 hover:bg-white/35",
-              )}
-            />
+              className="group flex size-10 items-center justify-center rounded-full"
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "rounded-full transition-all duration-500",
+                  index === activeIndex
+                    ? "h-1.5 w-8 bg-accent"
+                    : "size-1.5 bg-white/20 group-hover:bg-white/35",
+                )}
+              />
+            </button>
           ))}
         </div>
       </Container>
