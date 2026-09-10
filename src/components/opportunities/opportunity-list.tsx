@@ -8,10 +8,12 @@ interface OpportunityListProps {
 /** A vertical, editorial list — opportunities are read top-to-bottom by rank, not scanned like a card grid. */
 export function OpportunityList({ opportunities }: OpportunityListProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <ol className="flex list-none flex-col gap-4 p-0">
       {opportunities.map((opportunity) => (
-        <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+        <li key={opportunity.id}>
+          <OpportunityCard opportunity={opportunity} />
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
