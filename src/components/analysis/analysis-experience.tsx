@@ -10,7 +10,9 @@ import { ReportSection } from "@/components/analysis/report-section";
 import { ReportSectionNav } from "@/components/analysis/report-section-nav";
 import { Badge } from "@/components/ui/badge";
 import { CompetitorGrid } from "@/components/games/competitor-grid";
+import { ThemeColumn } from "@/components/insights/theme-column";
 import { ANALYSIS_STAGES } from "@/lib/analysis/constants";
+import { groupThemesBySentiment } from "@/lib/analysis/scoring";
 import type { AnalysisReport } from "@/lib/analysis/types";
 
 interface AnalysisExperienceProps {
@@ -66,6 +68,8 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
   }, [report.comparableGames.length]);
 
   if (isReportReady) {
+    const { positive, complaint } = groupThemesBySentiment(report.themes);
+
     return (
       <div className="flex flex-col gap-12 pb-20">
         <ReportSectionNav />
@@ -83,6 +87,21 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
           description="Steam titles closest to your concept, ranked by semantic similarity."
         >
           <CompetitorGrid games={report.comparableGames} />
+        </ReportSection>
+
+        <ReportSection
+          id="player-voice"
+          title="Player Voice"
+          description="Recurring patterns mined from player reviews across every comparable game."
+        >
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <ThemeColumn title="Players Love" sentiment="positive" themes={positive} />
+            <ThemeColumn
+              title="Players Complain About"
+              sentiment="complaint"
+              themes={complaint}
+            />
+          </div>
         </ReportSection>
       </div>
     );

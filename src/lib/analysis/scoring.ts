@@ -2,6 +2,7 @@ import type {
   ComparableGame,
   MarketDensity,
   MarketLandscape,
+  ReviewTheme,
 } from "@/lib/analysis/types";
 
 /** Titles released within this many years of `referenceYear` count as "recent". */
@@ -55,5 +56,20 @@ export function deriveMarketLandscape(
     comparableTitles: games.length,
     medianReviewCount,
     recentReleaseRatio: `${recentCount} / ${games.length}`,
+  };
+}
+
+interface ThemesBySentiment {
+  readonly positive: readonly ReviewTheme[];
+  readonly complaint: readonly ReviewTheme[];
+}
+
+/** Splits themes into the two columns the Player Voice section renders. */
+export function groupThemesBySentiment(
+  themes: readonly ReviewTheme[],
+): ThemesBySentiment {
+  return {
+    positive: themes.filter((theme) => theme.sentiment === "positive"),
+    complaint: themes.filter((theme) => theme.sentiment === "complaint"),
   };
 }
