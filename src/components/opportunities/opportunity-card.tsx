@@ -28,11 +28,11 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
       />
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex items-baseline gap-3">
-          <span className="font-display text-3xl font-semibold tabular-nums text-accent/35">
+        <div className="flex min-w-0 items-baseline gap-3">
+          <span className="font-display shrink-0 text-3xl font-semibold tabular-nums text-accent/35">
             #{opportunity.rank}
           </span>
-          <h3 className="text-lg font-semibold text-foreground">
+          <h3 className="min-w-0 text-lg font-semibold text-pretty text-foreground">
             {opportunity.title}
           </h3>
         </div>
