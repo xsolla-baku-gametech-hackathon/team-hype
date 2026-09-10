@@ -7,10 +7,12 @@ interface CompetitorGridProps {
 
 export function CompetitorGrid({ games }: CompetitorGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
       {games.map((game) => (
-        <CompetitorCard key={game.appId} game={game} />
+        <li key={game.appId}>
+          <CompetitorCard game={game} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
