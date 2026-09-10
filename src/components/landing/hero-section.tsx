@@ -23,9 +23,12 @@ export function HeroSection() {
     >
       <BackgroundEffects />
 
-      {/* Full-bleed visual plane — edge to edge, no inset crop */}
+      {/* Full-bleed visual plane — truly edge to edge, so the atmosphere
+          and vignette reach the left edge instead of leaving a bare
+          strip. Composition is shifted right via inner element offsets
+          in HeroOrbit, not by cropping this wrapper. */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="pointer-events-auto absolute inset-0 lg:left-[8%]">
+        <div className="pointer-events-auto absolute inset-0">
           <HeroOrbit className="h-full min-h-[100dvh]" />
         </div>
       </div>

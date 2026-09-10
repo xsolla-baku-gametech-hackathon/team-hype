@@ -141,7 +141,7 @@ export function HeroOrbit({ className }: { className?: string }) {
       </div>
 
       {/* Elliptical orbit rings — scaled to the taller stage */}
-      <div className="pointer-events-none absolute top-[52%] left-[55%] h-[min(92vw,720px)] w-[min(130vw,980px)] -translate-x-1/2 -translate-y-1/2">
+      <div className="pointer-events-none absolute top-[52%] left-[55%] h-[min(92vw,720px)] w-[min(130vw,980px)] -translate-x-1/2 -translate-y-1/2 lg:left-[59%]">
         <div className="hero-ring-a absolute inset-0 rounded-[50%] border border-accent/20 [transform:rotateX(62deg)]" />
         <div className="hero-ring-b absolute inset-[8%] rounded-[50%] border border-dashed border-white/15 [transform:rotateX(62deg)]" />
         <div className="hero-ring-c absolute inset-[18%] rounded-[50%] border border-[oklch(0.62_0.16_280_/_0.22)] [transform:rotateX(62deg)]" />
@@ -167,7 +167,7 @@ export function HeroOrbit({ className }: { className?: string }) {
       ))}
 
       {/* Central core — dominant scale so it never reads as a tiny crop */}
-      <div className="absolute top-[48%] left-[52%] z-10 w-[min(92vw,680px)] -translate-x-1/2 -translate-y-1/2 sm:top-[50%] sm:w-[min(78vw,760px)] lg:left-[58%] lg:w-[min(62vw,820px)]">
+      <div className="absolute top-[48%] left-[52%] z-10 w-[min(92vw,680px)] -translate-x-1/2 -translate-y-1/2 sm:top-[50%] sm:w-[min(78vw,760px)] lg:left-[62%] lg:w-[min(62vw,820px)]">
         <motion.div
           className="relative aspect-square w-full will-change-transform"
           style={reduce ? undefined : { transform: coreTransform }}

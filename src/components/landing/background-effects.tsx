@@ -11,7 +11,7 @@ export function BackgroundEffects() {
       <div className="absolute inset-0 bg-[#08090c]" />
 
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,oklch(0.42_0.1_280_/_0.28),transparent_62%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_18%_30%,oklch(0.4_0.08_230_/_0.2),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_65%_55%_at_6%_32%,oklch(0.4_0.08_230_/_0.22),transparent_60%)]" />
       <div className="absolute top-[20%] left-[50%] h-[480px] w-[min(95vw,900px)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.58_0.12_250_/_0.2),transparent_70%)] blur-3xl" />
 
       <div className="absolute inset-0 hud-grid opacity-70 [mask-image:radial-gradient(ellipse_80%_65%_at_55%_40%,#000_10%,transparent_75%)]" />
