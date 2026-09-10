@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Monitor, ScanSearch, Smartphone, Tv } from "lucide-react";
 import {
@@ -389,7 +389,7 @@ function AnalyzeStage() {
   const sy = useSpring(my, { stiffness: 70, damping: 22 });
   const panelTransform = useMotionTemplate`translate3d(${sx}px, ${sy}px, 0)`;
 
-  function onMove(event: React.MouseEvent<HTMLDivElement>) {
+  function onMove(event: MouseEvent<HTMLDivElement>) {
     if (reduce || !stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type MouseEvent } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -38,7 +38,7 @@ export function HeroOrbit({ className }: { className?: string }) {
   const sy = useSpring(my, { stiffness: 80, damping: 20 });
   const coreTransform = useMotionTemplate`translate3d(${sx}px, ${sy}px, 0)`;
 
-  function onMove(event: React.MouseEvent<HTMLDivElement>) {
+  function onMove(event: MouseEvent<HTMLDivElement>) {
     if (reduce || !stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
