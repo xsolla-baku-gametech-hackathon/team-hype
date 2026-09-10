@@ -33,6 +33,7 @@ export function HeroOrbit({ className }: { className?: string }) {
   const reduce = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
   const [stageActive, setStageActive] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 80, damping: 20 });
@@ -62,6 +63,14 @@ export function HeroOrbit({ className }: { className?: string }) {
     );
     observer.observe(node);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 640px)");
+    const sync = () => setIsDesktop(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
   }, []);
 
   return (
@@ -112,21 +121,20 @@ export function HeroOrbit({ className }: { className?: string }) {
         </div>
       </div>
 
-      {HERO_ORBIT_NODES.map((node) => (
-        <OrbitNode
-          key={node.asset.id}
-          src={node.asset.path}
-          className={cn(
-            node.className,
-            !node.showOnMobile && "hidden sm:block",
-          )}
-          floatDuration={node.floatDuration}
-          parallax={node.parallax}
-          mx={mx}
-          my={my}
-          reduce={!!reduce}
-        />
-      ))}
+      {HERO_ORBIT_NODES.filter((node) => node.showOnMobile || isDesktop).map(
+        (node) => (
+          <OrbitNode
+            key={node.asset.id}
+            src={node.asset.path}
+            className={node.className}
+            floatDuration={node.floatDuration}
+            parallax={node.parallax}
+            mx={mx}
+            my={my}
+            reduce={!!reduce}
+          />
+        ),
+      )}
 
       {/* Central core — dominant scale so it never reads as a tiny crop */}
       <div className="absolute top-[48%] left-[52%] z-10 w-[min(92vw,680px)] -translate-x-1/2 -translate-y-1/2 sm:top-[50%] sm:w-[min(78vw,760px)] lg:left-[62%] lg:w-[min(62vw,820px)]">
