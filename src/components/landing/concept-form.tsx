@@ -175,6 +175,8 @@ export function ConceptForm() {
 
                 <Textarea
                   id={conceptFieldId}
+                  name="concept"
+                  autoComplete="off"
                   rows={6}
                   placeholder={CONCEPT_PLACEHOLDER}
                   value={concept}
@@ -274,6 +276,8 @@ export function ConceptForm() {
                   <div className="relative mt-2.5">
                     <select
                       id={genreGroupId}
+                      name="genre"
+                      autoComplete="off"
                       value={genre}
                       onChange={(event) => setGenre(event.target.value)}
                       className="w-full appearance-none rounded-lg border border-white/[0.08] bg-black/20 px-3.5 py-2.5 pr-9 text-sm text-white/85 backdrop-blur-sm transition-colors duration-300 outline-none focus-visible:border-accent/55 focus-visible:shadow-[0_0_0_3px_oklch(0.78_0.13_185_/_0.18)]"
