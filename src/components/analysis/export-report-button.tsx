@@ -19,6 +19,7 @@ export function ExportReportButton() {
   const busyRef = useRef(false);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fallbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafId = useRef<number | null>(null);
 
   const clearTimers = useCallback(() => {
     if (resetTimer.current) {
@@ -28,6 +29,10 @@ export function ExportReportButton() {
     if (fallbackTimer.current) {
       clearTimeout(fallbackTimer.current);
       fallbackTimer.current = null;
+    }
+    if (rafId.current !== null) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = null;
     }
   }, []);
 
@@ -63,7 +68,8 @@ export function ExportReportButton() {
     clearTimers();
     setStatus("preparing");
 
-    requestAnimationFrame(() => {
+    rafId.current = requestAnimationFrame(() => {
+      rafId.current = null;
       try {
         window.print();
         // Fallback when afterprint is unreliable (some WebKit builds).
