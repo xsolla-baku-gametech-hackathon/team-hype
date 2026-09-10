@@ -130,9 +130,10 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
         >
           <ReportSectionNav />
 
+          <ReportHeader report={report} />
+
           <ReportSection id="overview" title="Overview">
-            <div className="flex flex-col gap-10 pt-4">
-              <ReportHeader report={report} />
+            <div className="flex flex-col gap-10">
               <MetricsRow summary={report.summary} />
               <ExecutiveSummary summary={report.executiveSummary} />
               <MarketLandscapePanel landscape={report.marketLandscape} />
