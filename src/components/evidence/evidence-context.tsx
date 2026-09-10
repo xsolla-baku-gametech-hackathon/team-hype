@@ -41,8 +41,13 @@ export function EvidenceProvider({
   const [activeThemeId, setActiveThemeId] = useState<string | null>(null);
 
   const contextValue = useMemo<EvidenceContextValue>(
-    () => ({ openEvidence: setActiveThemeId }),
-    [],
+    () => ({
+      openEvidence: (themeId: string) => {
+        if (!themes.some((theme) => theme.id === themeId)) return;
+        setActiveThemeId(themeId);
+      },
+    }),
+    [themes],
   );
 
   const activeTheme = themes.find((theme) => theme.id === activeThemeId) ?? null;
