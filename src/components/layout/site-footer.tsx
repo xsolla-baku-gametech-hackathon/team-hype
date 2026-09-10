@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/shared/logo";
-import { PRIMARY_NAV } from "@/lib/site-config";
+import { APP_NAME, PRIMARY_NAV } from "@/lib/site-config";
 
 export function SiteFooter() {
   return (
@@ -14,7 +14,9 @@ export function SiteFooter() {
       <Container className="relative flex flex-col gap-10 py-14 sm:py-16">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <div>
-            <Logo />
+            <Link href="/" aria-label={`${APP_NAME} home`} className="inline-flex">
+              <Logo />
+            </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
               Market intelligence for game developers — grounded in what Steam
               players already say.
