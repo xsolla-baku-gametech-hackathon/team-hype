@@ -7,7 +7,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export type ShowcaseAccent = "accent" | "cyan" | "positive" | "negative" | "opportunity";
+export type ShowcaseAccent = "accent" | "positive" | "negative" | "opportunity";
 
 export interface ShowcaseSignal {
   readonly label: string;
@@ -39,7 +39,7 @@ export const SHOWCASE_SLIDES: readonly ShowcaseSlideData[] = [
     accent: "accent",
     signals: [
       { label: "Concept captured", tone: "accent" },
-      { label: "Genre inferred", tone: "cyan" },
+      { label: "Genre inferred", tone: "accent" },
     ],
     preview: {
       eyebrow: "Your brief",
@@ -53,11 +53,11 @@ export const SHOWCASE_SLIDES: readonly ShowcaseSlideData[] = [
     title: "Similar Games Discovery",
     description: "Surface the closest Steam titles by play pattern — not just keyword match.",
     icon: ScanSearch,
-    accent: "cyan",
+    accent: "accent",
     signals: [
-      { label: "Voidtrain · 92%", tone: "cyan" },
+      { label: "Voidtrain · 92%", tone: "accent" },
       { label: "Raft · 88%", tone: "accent" },
-      { label: "Volcanoids · 81%", tone: "cyan" },
+      { label: "Volcanoids · 81%", tone: "accent" },
     ],
     preview: {
       eyebrow: "Comparable set",
@@ -108,7 +108,7 @@ export const SHOWCASE_SLIDES: readonly ShowcaseSlideData[] = [
     accent: "accent",
     signals: [
       { label: "Build with confidence", tone: "accent" },
-      { label: "Traceable evidence", tone: "cyan" },
+      { label: "Traceable evidence", tone: "accent" },
     ],
     preview: {
       eyebrow: "Decision memo",

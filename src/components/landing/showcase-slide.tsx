@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils/cn";
 
 const ACCENT_TEXT: Record<ShowcaseSlideData["accent"], string> = {
   accent: "text-accent",
-  cyan: "text-accent",
   positive: "text-positive",
   negative: "text-negative",
   opportunity: "text-opportunity",
@@ -15,7 +14,6 @@ const ACCENT_TEXT: Record<ShowcaseSlideData["accent"], string> = {
 
 const ACCENT_SURFACE: Record<ShowcaseSlideData["accent"], string> = {
   accent: "bg-accent/12 border-accent/30",
-  cyan: "bg-accent/10 border-accent/25",
   positive: "bg-positive/10 border-positive/25",
   negative: "bg-negative/10 border-negative/25",
   opportunity: "bg-opportunity/10 border-opportunity/25",
@@ -23,7 +21,6 @@ const ACCENT_SURFACE: Record<ShowcaseSlideData["accent"], string> = {
 
 const SIGNAL_TONE: Record<ShowcaseSlideData["signals"][number]["tone"], string> = {
   accent: "border-accent/25 bg-accent/10 text-accent",
-  cyan: "border-accent/20 bg-accent/8 text-accent/90",
   positive: "border-positive/25 bg-positive/10 text-positive",
   negative: "border-negative/25 bg-negative/10 text-negative",
   opportunity: "border-opportunity/25 bg-opportunity/10 text-opportunity",
