@@ -20,10 +20,18 @@ export function Logo({ className, markOnly = false }: LogoProps) {
     >
       <span
         aria-hidden="true"
-        className="relative flex size-8 items-center justify-center rounded-md border border-accent/30 bg-accent/10 text-accent shadow-[0_0_24px_-8px_var(--accent-glow)]"
+        className="relative flex size-8 items-center justify-center overflow-hidden rounded-lg border border-accent/35 bg-accent/10 text-accent shadow-[0_0_28px_-6px_var(--accent-glow)]"
       >
-        <svg viewBox="0 0 24 24" className="size-[18px]" fill="none">
-          <circle cx="12" cy="12" r="8.25" stroke="currentColor" strokeWidth="1.4" opacity="0.45" />
+        <span className="absolute inset-0 bg-[conic-gradient(from_210deg,transparent,oklch(0.78_0.13_185_/_0.35),transparent_40%)] opacity-70" />
+        <svg viewBox="0 0 24 24" className="relative size-[18px]" fill="none">
+          <circle
+            cx="12"
+            cy="12"
+            r="8.25"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            opacity="0.45"
+          />
           <circle cx="12" cy="12" r="4.75" stroke="currentColor" strokeWidth="1.5" />
           <path
             d="M12 7.4 14.6 12 12 16.6 9.4 12 12 7.4Z"

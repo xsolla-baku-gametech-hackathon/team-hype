@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import {
   AnimatePresence,
   motion,
+  useMotionTemplate,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -19,77 +21,159 @@ import { PRIMARY_NAV } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * Floating command island nav — detached from the top edge, cinematic entry.
+ * Interactive HUD dock — cursor spotlight, magnetic links, sliding
+ * active pill. Transparent over the hero, densifies on scroll.
  */
 export function SiteHeader() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
+  const spotX = useMotionValue(0);
+  const spotY = useMotionValue(0);
+  const spotlight = useMotionTemplate`radial-gradient(420px circle at ${spotX}px ${spotY}px, oklch(0.78 0.13 185 / 0.12), transparent 55%)`;
+
   useMotionValueEvent(scrollY, "change", (value) => {
-    setScrolled(value > 12);
+    setScrolled(value > 24);
   });
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
+  function onDockMove(event: MouseEvent<HTMLDivElement>) {
+    if (reduce || !dockRef.current) return;
+    const rect = dockRef.current.getBoundingClientRect();
+    spotX.set(event.clientX - rect.left);
+    spotY.set(event.clientY - rect.top);
+  }
+
+  const activeHref =
+    pathname.startsWith("/analysis")
+      ? "/analysis/demo"
+      : PRIMARY_NAV.find((item) => item.href.startsWith("/#") && pathname === "/")
+        ? null
+        : null;
+
   return (
-    <header className="sticky top-0 z-40 print:hidden">
-      <div className="mx-auto max-w-[1320px] px-4 pt-3 sm:px-6 lg:px-8">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 print:hidden">
+      <div className="mx-auto max-w-[1280px] px-3 pt-3 sm:px-5 sm:pt-4 lg:px-6">
         <motion.div
-          initial={reduce ? false : { opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          ref={dockRef}
+          onMouseMove={onDockMove}
+          initial={reduce ? false : { opacity: 0, y: -20, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            "relative flex h-14 items-center justify-between gap-4 rounded-xl border px-3.5 transition-[background,box-shadow,border-color] duration-500 sm:h-[3.75rem] sm:px-5",
+            "pointer-events-auto relative flex h-[3.4rem] items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 transition-[background,box-shadow,border-color,backdrop-filter] duration-500 sm:h-14 sm:px-4",
             scrolled
-              ? "border-white/10 bg-[#0a0c10]/82 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.9)] backdrop-blur-xl"
-              : "border-white/[0.07] bg-[#0a0c10]/55 backdrop-blur-md",
+              ? "border-white/12 bg-[#07090d]/88 shadow-[0_20px_60px_-28px_rgba(0,0,0,0.95),inset_0_1px_0_oklch(1_0_0_/_0.06)] backdrop-blur-2xl"
+              : "border-white/[0.08] bg-[#07090d]/35 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.05)] backdrop-blur-md",
           )}
         >
-          <Link href="/" aria-label="GameLens home" className="inline-flex min-w-0">
-            <Logo />
-          </Link>
+          {/* Cursor spotlight wash */}
+          {!reduce ? (
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-80"
+              style={{ background: spotlight }}
+            />
+          ) : null}
+
+          {/* Subtle top scan line */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+          />
+
+          <div className="relative z-10 flex min-w-0 items-center gap-3">
+            <Link
+              href="/"
+              aria-label="GameLens home"
+              className="group inline-flex min-w-0 items-center"
+            >
+              <Logo className="transition-transform duration-500 group-hover:scale-[1.02]" />
+            </Link>
+
+            <span
+              aria-hidden="true"
+              className="hidden items-center gap-1.5 rounded-full border border-accent/20 bg-accent/8 px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] text-accent uppercase sm:inline-flex"
+            >
+              <span className="relative flex size-1.5">
+                <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative size-1.5 rounded-full bg-accent" />
+              </span>
+              Live
+            </span>
+          </div>
 
           <nav
             aria-label="Primary"
-            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex"
+            className="absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center md:flex"
+            onMouseLeave={() => setHovered(null)}
           >
-            {PRIMARY_NAV.map((item) => {
-              const active =
-                item.href === "/analysis/demo"
-                  ? pathname.startsWith("/analysis")
-                  : false;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-[13px] tracking-wide text-white/45 transition-colors duration-300 hover:text-white",
-                    active && "bg-white/[0.04] text-white",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            <div className="relative flex items-center gap-0.5 rounded-full border border-white/[0.06] bg-white/[0.03] p-1">
+              {PRIMARY_NAV.map((item) => {
+                const isActive =
+                  item.href === "/analysis/demo"
+                    ? pathname.startsWith("/analysis")
+                    : activeHref === item.href;
+                const isHot = hovered === item.href || isActive;
+
+                return (
+                  <Magnetic key={item.href} strength={0.18}>
+                    <Link
+                      href={item.href}
+                      onMouseEnter={() => setHovered(item.href)}
+                      className={cn(
+                        "relative z-10 rounded-full px-3.5 py-1.5 text-[13px] tracking-wide transition-colors duration-300",
+                        isHot ? "text-white" : "text-white/45 hover:text-white/80",
+                      )}
+                    >
+                      {isHot ? (
+                        <motion.span
+                          layoutId="nav-pill"
+                          className="absolute inset-0 -z-10 rounded-full bg-white/[0.08] shadow-[inset_0_0_0_1px_oklch(1_0_0_/_0.06)]"
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 32,
+                          }}
+                        />
+                      ) : null}
+                      {item.label}
+                    </Link>
+                  </Magnetic>
+                );
+              })}
+            </div>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="relative z-10 flex items-center gap-2">
             <Button
               asChild
               variant="ghost"
               size="sm"
-              className="hidden text-white/55 hover:bg-white/[0.05] hover:text-white sm:inline-flex"
+              className="hidden text-white/50 hover:bg-white/[0.05] hover:text-white sm:inline-flex"
             >
               <Link href="/analysis/demo">View Demo</Link>
             </Button>
-            <Magnetic strength={0.22}>
-              <Button asChild size="sm" className="glow-accent">
-                <Link href="/#analyze" className="group inline-flex items-center gap-2">
+
+            <Magnetic strength={0.24}>
+              <Button
+                asChild
+                size="sm"
+                className="glow-accent relative overflow-hidden"
+              >
+                <Link
+                  href="/#analyze"
+                  className="group inline-flex items-center gap-2"
+                >
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                   Analyze Market
                   <span className="flex size-5 items-center justify-center rounded-full bg-accent-foreground/10 transition-transform duration-300 group-hover:translate-x-0.5">
                     <span aria-hidden="true" className="text-[11px] leading-none">
@@ -102,7 +186,7 @@ export function SiteHeader() {
 
             <button
               type="button"
-              className="inline-flex size-9 items-center justify-center rounded-md border border-white/10 text-white/70 md:hidden"
+              className="inline-flex size-9 items-center justify-center rounded-xl border border-white/10 text-white/70 transition-colors hover:border-accent/30 hover:bg-white/[0.04] hover:text-white md:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "Close menu" : "Open menu"}
@@ -117,23 +201,23 @@ export function SiteHeader() {
           {open ? (
             <motion.div
               id="mobile-nav"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, y: -10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-[#0a0c10]/95 p-3 backdrop-blur-xl md:hidden"
+              className="pointer-events-auto mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#07090d]/95 p-2.5 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.9)] backdrop-blur-2xl md:hidden"
             >
-              <nav aria-label="Mobile" className="flex flex-col gap-1">
+              <nav aria-label="Mobile" className="flex flex-col gap-0.5">
                 {PRIMARY_NAV.map((item, index) => (
                   <motion.div
                     key={item.href}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 * index, duration: 0.35 }}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.04 * index, duration: 0.3 }}
                   >
                     <Link
                       href={item.href}
-                      className="block rounded-md px-3 py-2.5 text-sm text-white/70 hover:bg-white/[0.04] hover:text-white"
+                      className="block rounded-xl px-3.5 py-3 text-sm text-white/70 transition-colors hover:bg-white/[0.04] hover:text-white"
                       onClick={() => setOpen(false)}
                     >
                       {item.label}
@@ -142,7 +226,7 @@ export function SiteHeader() {
                 ))}
                 <Link
                   href="/#analyze"
-                  className="mt-1 block rounded-md bg-accent px-3 py-2.5 text-center text-sm font-medium text-accent-foreground"
+                  className="mt-1 block rounded-xl bg-accent px-3.5 py-3 text-center text-sm font-medium text-accent-foreground"
                   onClick={() => setOpen(false)}
                 >
                   Analyze Market
