@@ -24,6 +24,16 @@ export function ReportHeader({ report }: ReportHeaderProps) {
       <h1 className="font-display max-w-3xl text-xl leading-snug font-medium tracking-tight text-foreground sm:text-2xl">
         {report.concept}
       </h1>
+      <p className="text-xs text-muted-foreground">
+        Generated{" "}
+        <time dateTime={report.createdAt}>
+          {new Date(report.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </time>
+      </p>
     </div>
   );
 }
