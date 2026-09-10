@@ -16,6 +16,14 @@ export const APP_DESCRIPTION =
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
+if (
+  process.env.NODE_ENV === "production" &&
+  /localhost|127\.0\.0\.1/i.test(APP_URL)
+) {
+  console.warn(
+    "[site-config] NEXT_PUBLIC_APP_URL is missing or still points at localhost; Open Graph absolute URLs will be wrong in production.",
+  );
+}
 
 export interface NavItem {
   readonly label: string;
