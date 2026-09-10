@@ -22,7 +22,7 @@ export function ThemeBar({ percentage, sentiment }: ThemeBarProps) {
           "h-full rounded-full",
           sentiment === "positive" ? "bg-positive" : "bg-negative",
         )}
-        style={{ width: `${percentage}%` }}
+      style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
       />
     </div>
   );
