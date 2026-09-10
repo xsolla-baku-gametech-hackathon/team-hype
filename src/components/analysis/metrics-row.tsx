@@ -79,18 +79,18 @@ export function MetricsRow({ summary }: MetricsRowProps) {
             delay: index * 0.05,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel"
+          className="group relative flex flex-col-reverse overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel"
         >
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
-          <dd className="font-display text-3xl font-semibold tracking-tight text-accent sm:text-4xl">
-            <AnimatedValue value={metric.value} />
-          </dd>
           <dt className="mt-2 text-[11px] tracking-wide text-muted-foreground uppercase sm:text-xs">
             {metric.label}
           </dt>
+          <dd className="font-display text-3xl font-semibold tracking-tight text-accent sm:text-4xl">
+            <AnimatedValue value={metric.value} />
+          </dd>
         </motion.div>
       ))}
     </dl>
