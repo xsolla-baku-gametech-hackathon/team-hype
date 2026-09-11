@@ -10,7 +10,6 @@ import {
   type FetchSteamReviewsParams,
   type SteamClientResult,
   type SteamReviewPage,
-  type SteamReviewSummary,
 } from "@/lib/steam/types";
 
 /** Exported for tests — pure and network-free. */
@@ -131,29 +130,4 @@ export async function fetchSteamReviews(
         : null,
     },
   };
-}
-
-/**
- * A single review's worth of payload is enough to read Steam's
- * `query_summary` block, so this avoids pulling a full page just to
- * report aggregate totals (e.g. for a competitor card tooltip).
- */
-export async function fetchSteamReviewSummary(
-  appId: number,
-): Promise<SteamClientResult<SteamReviewSummary>> {
-  const result = await fetchSteamReviews({ appId, numPerPage: 1 });
-
-  if (!result.success) return result;
-
-  if (!result.data.summary) {
-    return {
-      success: false,
-      error: {
-        code: "STEAM_UPSTREAM_ERROR",
-        message: "Steam did not return a review summary for this app id.",
-      },
-    };
-  }
-
-  return { success: true, data: result.data.summary };
 }
