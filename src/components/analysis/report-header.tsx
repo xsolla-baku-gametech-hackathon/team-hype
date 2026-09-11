@@ -58,7 +58,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
         {platformLabel && <Badge variant="neutral">{platformLabel}</Badge>}
         {genreLabel && <Badge variant="neutral">{genreLabel}</Badge>}
       </div>
-      <h1 className="font-display max-w-3xl text-xl leading-snug font-medium tracking-tight text-foreground sm:text-2xl">
+      <h1 className="font-display max-w-3xl break-words text-xl leading-snug font-medium tracking-tight text-pretty text-foreground sm:text-2xl">
         {concept}
       </h1>
       <p className="text-xs text-muted-foreground">
