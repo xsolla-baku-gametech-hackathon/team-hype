@@ -69,11 +69,19 @@ export function SiteHeader() {
     });
 
     function getFocusable(): HTMLElement[] {
+      const selector = "a[href], button:not([disabled])";
       const nodes: HTMLElement[] = [];
-      if (menuButtonRef.current) nodes.push(menuButtonRef.current);
+      // Include dock controls so Tab cannot escape into page chrome.
+      dockRef.current
+        ?.querySelectorAll<HTMLElement>(selector)
+        .forEach((node) => {
+          if (!nodes.includes(node)) nodes.push(node);
+        });
       mobileNavRef.current
-        ?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")
-        .forEach((node) => nodes.push(node));
+        ?.querySelectorAll<HTMLElement>(selector)
+        .forEach((node) => {
+          if (!nodes.includes(node)) nodes.push(node);
+        });
       return nodes;
     }
 
