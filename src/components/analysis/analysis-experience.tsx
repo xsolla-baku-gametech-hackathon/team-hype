@@ -187,7 +187,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
 
           <section
             id="evidence"
-            className="scroll-mt-28 rounded-xl border border-dashed border-accent/25 bg-accent/[0.04] px-5 py-6 sm:px-7"
+            className="scroll-mt-28 rounded-xl border border-dashed border-accent/25 bg-accent/[0.04] px-5 py-6 print:scroll-mt-0 sm:px-7"
           >
             <h2 className="font-display text-xl font-semibold tracking-tight text-foreground">
               Evidence drawer
