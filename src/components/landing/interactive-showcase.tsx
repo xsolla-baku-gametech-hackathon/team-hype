@@ -312,7 +312,11 @@ export function InteractiveShowcase() {
           </Reveal>
         </Container>
 
-        <div className="relative">
+        <p className="sr-only" aria-live="polite">
+        Now showing: {activeSlide.title}
+      </p>
+
+      <div className="relative">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16"
