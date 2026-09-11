@@ -25,10 +25,14 @@ export function Reveal({
 }: RevealProps) {
   const reduce = useReducedMotion();
 
+  if (reduce) {
+    return <div className={cn("relative", className)}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={cn("relative", className)}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2, margin: "0px 0px -8% 0px" }}
       transition={{
