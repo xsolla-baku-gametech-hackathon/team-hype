@@ -276,19 +276,21 @@ export function InteractiveShowcase() {
                 </AnimatePresence>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setUserPaused((value) => !value)}
-                  className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-2 text-xs text-white/70 transition-colors hover:border-accent/35 hover:text-white"
-                  aria-pressed={userPaused}
-                  aria-label={
-                    userPaused
-                      ? "Play showcase auto-advance"
-                      : "Pause showcase auto-advance"
-                  }
-                >
-                  {userPaused ? "Play" : "Pause"}
-                </button>
+                {!pinned ? (
+                  <button
+                    type="button"
+                    onClick={() => setUserPaused((value) => !value)}
+                    className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-2 text-xs text-white/70 transition-colors hover:border-accent/35 hover:text-white"
+                    aria-pressed={userPaused}
+                    aria-label={
+                      userPaused
+                        ? "Play showcase auto-advance"
+                        : "Pause showcase auto-advance"
+                    }
+                  >
+                    {userPaused ? "Play" : "Pause"}
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => goTo(activeIndex - 1)}
