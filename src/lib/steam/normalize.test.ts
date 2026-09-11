@@ -57,6 +57,12 @@ describe("normalizeSteamReview", () => {
     expect(normalizeSteamReview(raw).weightedVoteScore).toBe(0.5);
   });
 
+  it("falls back to zero when weighted_vote_score is not a finite number", () => {
+    const raw = buildRawReview({ weighted_vote_score: "not-a-number" });
+
+    expect(normalizeSteamReview(raw).weightedVoteScore).toBe(0);
+  });
+
   it("falls back to lifetime playtime when playtimeAtReview is missing", () => {
     const raw = buildRawReview({
       author: { steamid: "76500000000000001", playtime_forever: 340 },
