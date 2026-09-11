@@ -329,6 +329,9 @@ export function ConceptForm() {
                     {error}
                   </p>
 
+                  <p className="sr-only" aria-live="polite">
+                    {isSubmitting ? SUBMIT_STATUS[statusIndex] : ""}
+                  </p>
                   <Magnetic strength={0.16}>
                     <Button
                       type="submit"
