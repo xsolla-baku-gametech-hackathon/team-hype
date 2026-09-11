@@ -82,6 +82,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
       event.preventDefault();
       window.history.pushState(null, "", hash);
+      // pushState does not fire hashchange; notify listeners (e.g. primary nav).
+      window.dispatchEvent(new Event("hashchange"));
       lenis.scrollTo(el, {
         offset: -88,
         onComplete: () => {
