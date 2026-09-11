@@ -51,7 +51,7 @@ function AnimatedValue({ value }: { value: number }) {
       className="tabular-nums"
       aria-label={formatNumber(value)}
     >
-      {reduce ? formatNumber(value) : "0"}
+      {formatNumber(value)}
     </span>
   );
 }
