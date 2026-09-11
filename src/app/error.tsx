@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,14 @@ export default function GlobalError({
       <p className="text-sm text-muted-foreground">
         An unexpected error interrupted this page. You can try again.
       </p>
-      <Button type="button" onClick={reset}>
-        Try again
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button type="button" onClick={reset}>
+          Try again
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/">Go home</Link>
+        </Button>
+      </div>
     </div>
   );
 }
