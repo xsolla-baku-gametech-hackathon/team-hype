@@ -3,6 +3,7 @@ import { SearchX } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
+import { DEMO_ANALYSIS_PATH } from "@/lib/site-config";
 
 export default function AnalysisNotFound() {
   return (
@@ -15,9 +16,14 @@ export default function AnalysisNotFound() {
         This report may have expired or the link is incorrect. Start a new
         analysis from the homepage.
       </p>
-      <Button asChild>
-        <Link href="/#analyze">Analyze a new concept</Link>
-      </Button>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button asChild>
+          <Link href="/#analyze">Analyze a new concept</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href={DEMO_ANALYSIS_PATH}>View demo</Link>
+        </Button>
+      </div>
     </Container>
   );
 }
