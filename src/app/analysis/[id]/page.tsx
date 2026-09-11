@@ -36,11 +36,13 @@ export async function generateMetadata({
     openGraph: {
       title: "Analysis Report",
       description,
+      images: ["/opengraph-image"],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: "Analysis Report",
       description,
+      images: ["/opengraph-image"],
     },
   };
 }
