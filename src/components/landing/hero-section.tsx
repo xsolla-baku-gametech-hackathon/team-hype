@@ -42,6 +42,7 @@ export function HeroSection() {
             className="font-display text-[clamp(3.25rem,10vw,6rem)] leading-[0.95] font-bold tracking-[-0.045em] text-balance text-white drop-shadow-[0_12px_48px_rgba(0,0,0,0.75)]"
           >
             {APP_NAME}
+            <span className="sr-only"> — {APP_TAGLINE}</span>
           </motion.h1>
 
           <motion.p
