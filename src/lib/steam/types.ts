@@ -99,6 +99,8 @@ export interface FetchSteamReviewsParams {
   readonly purchaseType?: SteamPurchaseType;
   readonly language?: SteamReviewLanguage;
   readonly numPerPage?: number;
+  /** Optional caller abort (e.g. Next.js `request.signal` on disconnect). */
+  readonly signal?: AbortSignal;
 }
 
 export type SteamClientErrorCode =

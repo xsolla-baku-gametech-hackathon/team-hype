@@ -45,7 +45,11 @@ export async function GET(
     );
   }
 
-  const result = await fetchSteamReviews({ appId, ...queryResult.data });
+  const result = await fetchSteamReviews({
+    appId,
+    ...queryResult.data,
+    signal: request.signal,
+  });
 
   if (!result.success) {
     return apiErrorResponse(

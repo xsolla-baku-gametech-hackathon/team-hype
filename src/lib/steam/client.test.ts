@@ -196,4 +196,29 @@ describe("fetchSteamReviews", () => {
       error: { code: "STEAM_TIMEOUT", message: expect.any(String) },
     });
   });
+
+  it("reports STEAM_UPSTREAM_ERROR when the caller aborts the request", async () => {
+    const caller = new AbortController();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((_url: string, init?: RequestInit) => {
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            const abortError = new Error("The operation was aborted.");
+            abortError.name = "AbortError";
+            reject(abortError);
+          });
+        });
+      }),
+    );
+
+    const pending = fetchSteamReviews({ appId: 648_800, signal: caller.signal });
+    caller.abort();
+    const result = await pending;
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "STEAM_UPSTREAM_ERROR", message: expect.any(String) },
+    });
+  });
 });

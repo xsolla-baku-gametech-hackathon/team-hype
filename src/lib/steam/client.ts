@@ -56,6 +56,21 @@ export async function fetchSteamReviews(
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), STEAM_REQUEST_TIMEOUT_MS);
 
+  const onCallerAbort = () => controller.abort();
+  if (params.signal) {
+    if (params.signal.aborted) {
+      clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: {
+          code: "STEAM_UPSTREAM_ERROR",
+          message: "Request was aborted before contacting Steam.",
+        },
+      };
+    }
+    params.signal.addEventListener("abort", onCallerAbort, { once: true });
+  }
+
   let response: Response;
   try {
     response = await fetch(buildSteamReviewsUrl(params), {
@@ -64,14 +79,21 @@ export async function fetchSteamReviews(
     });
   } catch (cause) {
     const isAbort = cause instanceof Error && cause.name === "AbortError";
+    const callerAborted = Boolean(params.signal?.aborted);
     return {
       success: false,
       error: isAbort
-        ? { code: "STEAM_TIMEOUT", message: "Steam took too long to respond." }
+        ? callerAborted
+          ? {
+              code: "STEAM_UPSTREAM_ERROR",
+              message: "Request was aborted before Steam responded.",
+            }
+          : { code: "STEAM_TIMEOUT", message: "Steam took too long to respond." }
         : { code: "STEAM_UPSTREAM_ERROR", message: "Unable to reach Steam." },
     };
   } finally {
     clearTimeout(timeoutId);
+    params.signal?.removeEventListener("abort", onCallerAbort);
   }
 
   if (!response.ok) {
