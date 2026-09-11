@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
+import { DEMO_ANALYSIS_PATH } from "@/lib/site-config";
 
 export default function AnalysisError({
   error,
@@ -23,9 +25,17 @@ export default function AnalysisError({
       <p className="text-sm text-muted-foreground">
         We couldn&apos;t load this report. Check the link or try again.
       </p>
-      <Button type="button" onClick={reset}>
-        Try again
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button type="button" onClick={reset}>
+          Try again
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/">Go home</Link>
+        </Button>
+        <Button asChild variant="ghost">
+          <Link href={DEMO_ANALYSIS_PATH}>View demo</Link>
+        </Button>
+      </div>
     </div>
   );
 }
