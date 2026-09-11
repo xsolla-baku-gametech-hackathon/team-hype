@@ -220,11 +220,15 @@ export function ConceptForm() {
                 </p>
 
                 <fieldset className="mt-7">
-                  <legend className="mb-2.5 text-[13px] font-medium text-white/70">
+                  <legend
+                    id="platform-legend"
+                    className="mb-2.5 text-[13px] font-medium text-white/70"
+                  >
                     Platform
                   </legend>
                   <div
                     role="radiogroup"
+                    aria-labelledby="platform-legend"
                     className="flex flex-wrap gap-1.5 rounded-lg border border-white/[0.08] bg-black/20 p-1.5 backdrop-blur-sm"
                     onKeyDown={(event) => {
                       const keys = [
