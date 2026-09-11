@@ -23,7 +23,7 @@ export function buildSteamReviewsUrl(params: FetchSteamReviewsParams): string {
     "num_per_page",
     String(params.numPerPage ?? DEFAULT_REVIEWS_PER_PAGE),
   );
-  url.searchParams.set("cursor", params.cursor ?? "*");
+  url.searchParams.set("cursor", params.cursor?.trim() || "*");
   url.searchParams.set("review_type", params.reviewType ?? "all");
   url.searchParams.set("purchase_type", params.purchaseType ?? "all");
 
