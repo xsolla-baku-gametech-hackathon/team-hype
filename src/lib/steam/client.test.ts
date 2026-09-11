@@ -106,7 +106,11 @@ describe("fetchSteamReviews", () => {
   });
 
   it("returns a null summary when query_summary is omitted", async () => {
-    const { query_summary: _ignored, ...withoutSummary } = VALID_STEAM_RESPONSE;
+    const withoutSummary = {
+      success: VALID_STEAM_RESPONSE.success,
+      reviews: VALID_STEAM_RESPONSE.reviews,
+      cursor: VALID_STEAM_RESPONSE.cursor,
+    };
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse(withoutSummary)));
 
     const result = await fetchSteamReviews({ appId: 648_800 });
