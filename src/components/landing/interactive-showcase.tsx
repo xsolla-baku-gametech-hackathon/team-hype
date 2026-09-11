@@ -332,6 +332,9 @@ export function InteractiveShowcase() {
               so cards sit right under the heading, not floating lower. */}
           <div
             ref={stageRef}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Showcase cards"
             className="scrollbar-none w-full overflow-x-auto lg:overflow-hidden"
           >
             <div
