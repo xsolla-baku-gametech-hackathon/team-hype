@@ -105,6 +105,17 @@ describe("fetchSteamReviews", () => {
     expect(result.data.cursor).toBe("AoJw abc");
   });
 
+  it("returns a null summary when query_summary is omitted", async () => {
+    const { query_summary: _ignored, ...withoutSummary } = VALID_STEAM_RESPONSE;
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse(withoutSummary)));
+
+    const result = await fetchSteamReviews({ appId: 648_800 });
+
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error("expected success");
+    expect(result.data.summary).toBeNull();
+  });
+
   it("dedupes reviews that share a recommendation id", async () => {
     const duplicate = {
       ...VALID_STEAM_RESPONSE.reviews[0],
