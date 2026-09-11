@@ -19,10 +19,11 @@ export function buildSteamReviewsUrl(params: FetchSteamReviewsParams): string {
   url.searchParams.set("json", "1");
   url.searchParams.set("filter", "recent");
   url.searchParams.set("language", params.language ?? DEFAULT_REVIEW_LANGUAGE);
-  url.searchParams.set(
-    "num_per_page",
-    String(params.numPerPage ?? DEFAULT_REVIEWS_PER_PAGE),
+  const numPerPage = Math.min(
+    100,
+    Math.max(1, params.numPerPage ?? DEFAULT_REVIEWS_PER_PAGE),
   );
+  url.searchParams.set("num_per_page", String(numPerPage));
   url.searchParams.set("cursor", params.cursor?.trim() || "*");
   url.searchParams.set("review_type", params.reviewType ?? "all");
   url.searchParams.set("purchase_type", params.purchaseType ?? "all");
