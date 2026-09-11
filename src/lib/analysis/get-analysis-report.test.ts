@@ -36,3 +36,10 @@ describe("applyReportQueryOverrides", () => {
     expect(next.genre).toBe(report.genre);
   });
 });
+
+describe("getAnalysisReport", () => {
+  it("returns null for an unknown report id", () => {
+    expect(getAnalysisReport("nope")).toBeNull();
+  });
+});
+
