@@ -100,6 +100,29 @@ describe("fetchSteamReviews", () => {
     expect(result.data.cursor).toBe("AoJw abc");
   });
 
+  it("dedupes reviews that share a recommendation id", async () => {
+    const duplicate = {
+      ...VALID_STEAM_RESPONSE.reviews[0],
+      votes_up: 99,
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          ...VALID_STEAM_RESPONSE,
+          reviews: [VALID_STEAM_RESPONSE.reviews[0], duplicate],
+        }),
+      ),
+    );
+
+    const result = await fetchSteamReviews({ appId: 648_800 });
+
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error("expected success");
+    expect(result.data.reviews).toHaveLength(1);
+    expect(result.data.reviews[0]?.votesUp).toBe(5);
+  });
+
   it("reports STEAM_UPSTREAM_ERROR for a non-2xx response", async () => {
     vi.stubGlobal(
       "fetch",
