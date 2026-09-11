@@ -130,7 +130,7 @@ export function ConceptForm() {
   }
 
   const trimmedLength = concept.trim().length;
-  const remaining = MAX_CONCEPT_LENGTH - concept.length;
+  const remaining = MAX_CONCEPT_LENGTH - trimmedLength;
   const meetsMinimum = trimmedLength >= MIN_CONCEPT_LENGTH;
 
   return (
