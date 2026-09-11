@@ -33,8 +33,12 @@ export function EvidenceDrawer({ theme, evidence, onClose }: EvidenceDrawerProps
     >
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Evidence</SheetTitle>
-          {theme && <SheetDescription>{theme.label}</SheetDescription>}
+          <SheetTitle>{theme ? theme.label : "Evidence"}</SheetTitle>
+          {theme && (
+            <SheetDescription>
+              Sample Steam reviews supporting this theme.
+            </SheetDescription>
+          )}
         </SheetHeader>
 
         {theme && (
