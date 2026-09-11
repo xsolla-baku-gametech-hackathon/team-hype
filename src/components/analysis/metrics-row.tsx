@@ -66,33 +66,52 @@ export function MetricsRow({ summary }: MetricsRowProps) {
     { value: summary.marketOpportunitiesCount, label: "Market Opportunities" },
   ];
 
+  const cardClassName =
+    "group relative flex flex-col-reverse overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel";
+
   return (
     <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-      {metrics.map((metric, index) => (
-        <motion.div
-          key={metric.label}
-          initial={reduce ? false : { opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{
-            duration: 0.45,
-            delay: index * 0.05,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="group relative flex flex-col-reverse overflow-hidden rounded-xl border border-white/[0.08] bg-surface px-4 py-5 panel-bevel"
-        >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          />
-          <dt className="mt-2 text-[11px] tracking-wide text-muted-foreground uppercase sm:text-xs">
-            {metric.label}
-          </dt>
-          <dd className="font-display text-3xl font-semibold tracking-tight text-accent sm:text-4xl">
-            <AnimatedValue value={metric.value} />
-          </dd>
-        </motion.div>
-      ))}
+      {metrics.map((metric, index) => {
+        const body = (
+          <>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            />
+            <dt className="mt-2 text-[11px] tracking-wide text-muted-foreground uppercase sm:text-xs">
+              {metric.label}
+            </dt>
+            <dd className="font-display text-3xl font-semibold tracking-tight text-accent sm:text-4xl">
+              <AnimatedValue value={metric.value} />
+            </dd>
+          </>
+        );
+
+        if (reduce) {
+          return (
+            <div key={metric.label} className={cardClassName}>
+              {body}
+            </div>
+          );
+        }
+
+        return (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{
+              duration: 0.45,
+              delay: index * 0.05,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className={cardClassName}
+          >
+            {body}
+          </motion.div>
+        );
+      })}
     </dl>
   );
 }
