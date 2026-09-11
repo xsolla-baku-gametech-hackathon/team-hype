@@ -100,7 +100,6 @@ export function ExportReportButton() {
       size="sm"
       disabled={status === "preparing"}
       aria-busy={status === "preparing"}
-      aria-live="polite"
       onClick={handleExport}
       className={cn(
         "group relative min-w-[8.75rem] overflow-hidden border-white/12 bg-white/[0.03] transition-[border-color,background-color,box-shadow,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
@@ -111,6 +110,9 @@ export function ExportReportButton() {
         status === "error" && "border-negative/35 bg-negative/10 text-negative",
       )}
     >
+      <span className="sr-only" aria-live="polite">
+        {label}
+      </span>
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={status}
