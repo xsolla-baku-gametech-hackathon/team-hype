@@ -71,7 +71,15 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [revealedGameCount, setRevealedGameCount] = useState(0);
   const [isReportReady, setIsReportReady] = useState(false);
+  const [animationReportId, setAnimationReportId] = useState(report.id);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  if (animationReportId !== report.id) {
+    setAnimationReportId(report.id);
+    setActiveStageIndex(0);
+    setRevealedGameCount(0);
+    setIsReportReady(false);
+  }
 
   useEffect(() => {
     if (reduce) return;
@@ -109,7 +117,7 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
       timeouts.forEach(clearTimeout);
       timeoutsRef.current = [];
     };
-  }, [reduce, report.comparableGames.length]);
+  }, [reduce, report.id, report.comparableGames.length]);
 
   function skipToReport() {
     timeoutsRef.current.forEach(clearTimeout);
