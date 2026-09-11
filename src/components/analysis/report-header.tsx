@@ -11,8 +11,20 @@ interface ReportHeaderProps {
   report: AnalysisReport;
 }
 
+function readAndClearPendingConcept(): string | null {
+  try {
+    const pending = sessionStorage.getItem(PENDING_CONCEPT_STORAGE_KEY);
+    if (!pending) return null;
+    sessionStorage.removeItem(PENDING_CONCEPT_STORAGE_KEY);
+    return pending;
+  } catch {
+    return null;
+  }
+}
+
 export function ReportHeader({ report }: ReportHeaderProps) {
   const [concept, setConcept] = useState(report.concept);
+  const [conceptSourceId, setConceptSourceId] = useState(report.id);
   const platformLabel = PLATFORM_OPTIONS.find(
     (option) => option.value === report.platform,
   )?.label;
@@ -20,19 +32,20 @@ export function ReportHeader({ report }: ReportHeaderProps) {
     (option) => option.value === report.genre,
   )?.label;
 
-  useEffect(() => {
-    try {
-      const pending = sessionStorage.getItem(PENDING_CONCEPT_STORAGE_KEY);
-      if (pending) {
-        setConcept(pending);
-        sessionStorage.removeItem(PENDING_CONCEPT_STORAGE_KEY);
-        return;
-      }
-    } catch {
-      // Ignore storage access failures.
-    }
+  // Keep headline in sync when navigating between report ids (render-time
+  // sync avoids setState-in-effect cascading renders).
+  if (conceptSourceId !== report.id) {
+    setConceptSourceId(report.id);
     setConcept(report.concept);
-  }, [report.concept, report.id]);
+  }
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const pending = readAndClearPendingConcept();
+      if (pending) setConcept(pending);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [report.id]);
 
   return (
     <div className="flex flex-col gap-5">
