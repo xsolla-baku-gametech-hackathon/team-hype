@@ -12,6 +12,8 @@ interface PrintRecommendationsProps {
  * field into a standalone numbered list that only renders when printing.
  */
 export function PrintRecommendations({ opportunities }: PrintRecommendationsProps) {
+  if (opportunities.length === 0) return null;
+
   return (
     <div className="hidden print:block">
       <ReportSection id="print-recommendations" title="Recommendations">
