@@ -53,6 +53,7 @@ export function CompetitorCard({ game }: CompetitorCardProps) {
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
           <span className="text-xs text-muted-foreground">
             Released {game.releaseYear}
+            {game.price ? ` · ${game.price}` : ""}
           </span>
           <Link
             href="#player-voice"
