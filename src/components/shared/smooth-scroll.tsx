@@ -98,8 +98,27 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     document.addEventListener("click", onAnchorClick);
 
+    function onPopState() {
+      const hash = window.location.hash;
+      if (!hash || hash === "#") {
+        lenis.scrollTo(0, { immediate: false });
+        return;
+      }
+      let id: string;
+      try {
+        id = decodeURIComponent(hash.slice(1));
+      } catch {
+        return;
+      }
+      const el = document.getElementById(id);
+      if (!(el instanceof HTMLElement)) return;
+      lenis.scrollTo(el, { offset: -88 });
+    }
+    window.addEventListener("popstate", onPopState);
+
     return () => {
       document.removeEventListener("click", onAnchorClick);
+      window.removeEventListener("popstate", onPopState);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       gsap.ticker.remove(update);
       gsap.ticker.lagSmoothing(500, 33);
