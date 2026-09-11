@@ -3,10 +3,14 @@ import type { Metadata } from "next";
 
 import { AnalysisExperience } from "@/components/analysis/analysis-experience";
 import { Container } from "@/components/layout/container";
-import { getAnalysisReport } from "@/lib/analysis/get-analysis-report";
+import {
+  applyReportQueryOverrides,
+  getAnalysisReport,
+} from "@/lib/analysis/get-analysis-report";
 
 interface AnalysisPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ platform?: string; genre?: string }>;
 }
 
 export function generateStaticParams() {
@@ -51,17 +55,23 @@ export async function generateMetadata({
   };
 }
 
-export default async function AnalysisPage({ params }: AnalysisPageProps) {
+export default async function AnalysisPage({
+  params,
+  searchParams,
+}: AnalysisPageProps) {
   const { id } = await params;
+  const query = await searchParams;
   const report = getAnalysisReport(id);
 
   if (!report) {
     notFound();
   }
 
+  const resolved = applyReportQueryOverrides(report, query);
+
   return (
     <Container>
-      <AnalysisExperience report={report} />
+      <AnalysisExperience report={resolved} />
     </Container>
   );
 }

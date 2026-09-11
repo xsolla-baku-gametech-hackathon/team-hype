@@ -30,6 +30,7 @@ import {
   conceptFormSchema,
 } from "@/lib/analysis/types";
 import { VISUAL_ASSETS } from "@/lib/visual-assets";
+import { PENDING_CONCEPT_STORAGE_KEY } from "@/lib/analysis/pending-concept";
 import { DEMO_ANALYSIS_PATH } from "@/lib/site-config";
 import { cn } from "@/lib/utils/cn";
 
@@ -109,9 +110,17 @@ export function ConceptForm() {
       window.setTimeout(() => setStatusIndex(2), 900),
       window.setTimeout(() => {
         submitTimersRef.current = [];
+        try {
+          sessionStorage.setItem(
+            PENDING_CONCEPT_STORAGE_KEY,
+            result.data.concept,
+          );
+        } catch {
+          // Private mode / quota — report still loads with fixture concept.
+        }
         const params = new URLSearchParams();
-        if (platform) params.set("platform", platform);
-        if (genre) params.set("genre", genre);
+        if (result.data.platform) params.set("platform", result.data.platform);
+        if (result.data.genre) params.set("genre", result.data.genre);
         const query = params.toString();
         router.push(
           query ? `${DEMO_ANALYSIS_PATH}?${query}` : DEMO_ANALYSIS_PATH,
