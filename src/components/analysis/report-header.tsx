@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { GENRE_OPTIONS, PLATFORM_OPTIONS } from "@/lib/analysis/constants";
 import { PENDING_CONCEPT_STORAGE_KEY } from "@/lib/analysis/pending-concept";
-import type { AnalysisReport } from "@/lib/analysis/types";
+import {
+  MAX_CONCEPT_LENGTH,
+  type AnalysisReport,
+} from "@/lib/analysis/types";
 
 interface ReportHeaderProps {
   report: AnalysisReport;
@@ -16,7 +19,8 @@ function readAndClearPendingConcept(): string | null {
     const pending = sessionStorage.getItem(PENDING_CONCEPT_STORAGE_KEY);
     if (!pending) return null;
     sessionStorage.removeItem(PENDING_CONCEPT_STORAGE_KEY);
-    return pending;
+    const sanitized = pending.trim().slice(0, MAX_CONCEPT_LENGTH);
+    return sanitized.length > 0 ? sanitized : null;
   } catch {
     return null;
   }
