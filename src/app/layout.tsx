@@ -47,6 +47,7 @@ export const metadata: Metadata = {
     siteName: APP_NAME,
     title: `${APP_NAME} - Market Intelligence for Game Developers`,
     description: APP_DESCRIPTION,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
