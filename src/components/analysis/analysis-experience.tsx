@@ -233,7 +233,6 @@ export function AnalysisExperience({ report }: AnalysisExperienceProps) {
       <div className="flex flex-col items-center gap-3">
         {revealedGameCount > 0 && (
           <p
-            role="status"
             aria-live="polite"
             className="font-mono text-xs tracking-wide text-muted-foreground uppercase"
           >
