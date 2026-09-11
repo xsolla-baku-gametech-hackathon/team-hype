@@ -25,7 +25,11 @@ export async function GET(
   const { appid } = await params;
   const appId = Number.parseInt(appid, 10);
 
-  if (!Number.isInteger(appId) || appId <= 0 || String(appId) !== appid) {
+  if (
+    !Number.isSafeInteger(appId) ||
+    appId <= 0 ||
+    String(appId) !== appid
+  ) {
     return apiErrorResponse(
       "INVALID_APP_ID",
       `"${appid}" is not a valid Steam app id.`,
