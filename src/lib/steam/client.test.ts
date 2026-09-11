@@ -49,6 +49,11 @@ describe("buildSteamReviewsUrl", () => {
     expect(url.searchParams.get("cursor")).toBe("*");
   });
 
+  it("defaults an empty cursor to the initial Steam page marker", () => {
+    const url = new URL(buildSteamReviewsUrl({ appId: 648_800, cursor: "" }));
+    expect(url.searchParams.get("cursor")).toBe("*");
+  });
+
   it("forwards optional params when provided", () => {
     const url = new URL(
       buildSteamReviewsUrl({
