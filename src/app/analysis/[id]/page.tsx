@@ -28,19 +28,23 @@ export async function generateMetadata({
   }
 
   const description = `Evidence-backed market intelligence for “${report.concept}” — comparable Steam titles, player themes, and ranked opportunities.`;
+  const title =
+    report.concept.length > 60
+      ? `${report.concept.slice(0, 57).trimEnd()}…`
+      : report.concept;
 
   return {
-    title: "Analysis Report",
+    title,
     description,
     alternates: { canonical: `/analysis/${id}` },
     openGraph: {
-      title: "Analysis Report",
+      title,
       description,
       images: ["/opengraph-image"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Analysis Report",
+      title,
       description,
       images: ["/opengraph-image"],
     },
