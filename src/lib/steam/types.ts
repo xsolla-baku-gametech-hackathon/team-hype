@@ -51,7 +51,7 @@ export const steamReviewsResponseSchema = z.object({
   success: z.number(),
   query_summary: steamQuerySummarySchema.optional(),
   reviews: z.array(rawSteamReviewSchema).optional().default([]),
-  cursor: z.string().optional(),
+  cursor: z.string().trim().optional().transform((value) => value || undefined),
 });
 
 export type RawSteamReview = z.infer<typeof rawSteamReviewSchema>;
@@ -119,7 +119,7 @@ export type SteamClientResult<T> =
   | { readonly success: false; readonly error: SteamClientError };
 
 export const requestReviewsQuerySchema = z.object({
-  cursor: z.string().optional(),
+  cursor: z.string().trim().optional().transform((value) => value || undefined),
   reviewType: z.enum(STEAM_REVIEW_TYPES).optional(),
   purchaseType: z.enum(STEAM_PURCHASE_TYPES).optional(),
   language: z.enum(STEAM_REVIEW_LANGUAGES).optional(),
