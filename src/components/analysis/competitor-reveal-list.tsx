@@ -27,6 +27,7 @@ export function CompetitorRevealList({ games }: CompetitorRevealListProps) {
           {game.name}
           <span className="tabular-nums text-accent">
             {formatPercentage(game.similarity)}
+            <span className="sr-only"> match</span>
           </span>
         </li>
       ))}
