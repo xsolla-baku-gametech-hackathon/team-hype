@@ -43,9 +43,14 @@ describe("deriveMarketLandscape", () => {
   it("classifies density from the median review count", () => {
     const denseGames = [buildGame({ totalReviews: 80_000 }), buildGame({ totalReviews: 90_000 })];
     const sparseGames = [buildGame({ totalReviews: 500 }), buildGame({ totalReviews: 800 })];
+    const moderateGames = [
+      buildGame({ totalReviews: 20_000 }),
+      buildGame({ totalReviews: 30_000 }),
+    ];
 
     expect(deriveMarketLandscape(denseGames, 2026).density).toBe("high");
     expect(deriveMarketLandscape(sparseGames, 2026).density).toBe("low");
+    expect(deriveMarketLandscape(moderateGames, 2026).density).toBe("moderate");
   });
 });
 
