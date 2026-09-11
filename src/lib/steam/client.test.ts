@@ -202,6 +202,20 @@ describe("fetchSteamReviews", () => {
     });
   });
 
+  it("skips the network when the caller signal is already aborted", async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    const caller = new AbortController();
+    caller.abort();
+
+    const result = await fetchSteamReviews({ appId: 648_800, signal: caller.signal });
+
+    expect(result.success).toBe(false);
+    if (result.success) throw new Error("expected failure");
+    expect(result.error.code).toBe("STEAM_UPSTREAM_ERROR");
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it("reports STEAM_UPSTREAM_ERROR when the caller aborts the request", async () => {
     const caller = new AbortController();
     vi.stubGlobal(
